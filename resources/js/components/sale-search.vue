@@ -1,10 +1,10 @@
-<template onscroll="bottomOfWindow">
+<template>
     <main class="main-content" role="main">
         <div class="container">
             <section class="mb-5">
                 <div class="filter-first">
                     <div class="row ml-0 mr-0 align-items-stretch">
-                        <div class="col-lg-4 pl-0 pr-0 position-static">
+                        <div class="col-lg-3 pl-0 pr-0 position-static">
                             <div class="dropdown position-static h-100">
                                 <a href="#" class="filter-button" role="button" id="dropdownRegionLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить фильтр по <span>{{cityLabel}}</span></a>
                                 <div class="dropdown-menu dropdown-menu--filter" aria-labelledby="dropdownRegionLink">
@@ -14,7 +14,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 pl-0 pr-0 position-static">
+                        <div class="col-lg-3 pl-0 pr-0 position-static">
                             <div class="dropdown position-static h-100">
                                 <a href="#" class="filter-button" role="button" id="dropdownBrandLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить фильтр по <span>{{typeLabel}}</span></a>
                                 <div class="dropdown-menu dropdown-menu--filter" aria-labelledby="dropdownBrandLink">
@@ -24,12 +24,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 pl-0 pr-0 position-static">
+                        <div class="col-lg-3 pl-0 pr-0 position-static">
                             <div class="dropdown position-static h-100">
                                 <a href="#" class="filter-button" role="button" id="dropdownTypeLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить фильтр по <span>{{markLabel}}</span></a>
                                 <div class="dropdown-menu dropdown-menu--filter" aria-labelledby="dropdownTypeLink">
                                     <ul class="filter-list filter-list--column-4">
                                         <li class="filter-list__item" :class="item.class" v-for="item in markOptions" @click="changeMarkKey(item.key)"><a href="#">{{item.label}}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 pl-0 pr-0 position-static">
+                            <div class="dropdown h-100">
+                                <a href="#" class="filter-button" role="button" id="dropdownStatusLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить фильтр по <span>{{conditionLabel}}</span></a>
+                                <div class="dropdown-menu dropdown-menu--filter" aria-labelledby="dropdownStatusLink">
+                                    <ul class="filter-list">
+                                        <li class="filter-list__item" :class="item.class" v-for="item in conditionOptions" @click="changeConditionKey(item.key)"><a href="#">{{item.label}}</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -64,13 +74,13 @@
                     <div class="col-lg-4 mb-5" v-for="(item, index) in objectList">
                         <div class="item">
                             <h4 class="item__title"><a href="#">{{item.title}}</a></h4>
-                            <div class="item__image" :style="{ backgroundImage: 'url(\'' + item.image_data + '\')' }">
+                            <div class="item__image"  :style="{ backgroundImage: 'url(\'' + item.image_data + '\')' }">
                                 <i class="item__star current"></i>
                                 <div class="item__price-first">{{item.price}}</div>
                                 <div class="item__content">
                                     <span class="item__info">Вы звонили</span>
                                     <div class="item__price">{{item.price}}</div>
-                                    <div class="item__excerpt">{{item.description}}</div>
+                                    <div class="item__excerpt">{{item.description.substring(0,150)}}</div>
                                     <div class="item__meta">{{item.city}}, {{item.date}}</div>
                                 </div>
                             </div>
@@ -88,7 +98,7 @@
 
 <script>
     export default {
-        name: "rent-search",
+        name: "sale-search",
         data() {
             return {
                 objectList: [],
@@ -99,30 +109,26 @@
                 priceFrom: null,
                 priceTo: null,
                 keyWords: null,
-                searchData: {
-                    lastindex: null,
-                    city: null,
-                    mark: null,
-                    type: null,
-                    priceFrom: null,
-                    priceTo: null,
-                    keyWords: null,
-                },
+                searchData: {},
                 cityOptions: [],
                 markOptions: [],
                 typeOptions: [],
+                conditionOptions: [],
                 text: 'Объявлении',
                 count : 0,
                 cityLabel: 'Местоположение',
                 markLabel: 'Марка техники',
                 typeLabel: 'Тип техники',
+                conditionLabel: "Состояние",
                 bottomOfWindow: 0,
+
             }
         },
         mounted: function () {
             this.getCityOptions();
             this.getTypeOptions();
             this.getMarkOptions();
+            this.getConditionOptions();
             this.search();
         },
         methods: {
@@ -139,6 +145,11 @@
             getMarkOptions: function () {
                 this.axios.post('/getMarkList', {}).then((response) => {
                     this.markOptions = response.data;
+                });
+            },
+            getConditionOptions: function () {
+                this.axios.post('/sale/getConditionOptions', {}).then(response => {
+                    this.conditionOptions = response.data;
                 });
             },
             changeCityKey: function (key) {
@@ -180,7 +191,21 @@
                 });
                 this.typeLabel = label;
             },
+            changeConditionKey: function (key) {
+                this.type = key;
+                var label = '';
+                this.conditionOptions.forEach(function(option){
+                    if(option.key === key){
+                        option.class = 'current';
+                        label = option.label;
+                    }else{
+                        option.class = '';
+                    }
+                });
+                this.conditionLabel = label;
+            },
             resetKeys: function(){
+                this.lastIndex = 0;
                 this.searchData = {
                     mark : this.mark,
                     city : this.city,
@@ -189,20 +214,18 @@
                     priceFrom : this.priceFrom,
                     priceTo : this.priceTo,
                     keyWords : this.keyWords,
-                    condition : this.condition,
                 }
             },
             search: function(){
                 this.resetKeys();
-                this.axios.post('/rent/getObjects', this.searchData).then(response => {
+                this.axios.post('/sale/getObjects', this.searchData).then(response => {
                     this.fetchResponseData(response.data, true);
                 });
             },
             fetchResponseData: function (response, clearData = false) {
-                console.log(response);
                 this.lastIndex = response.last_index;
                 var vm = this;
-                if(this.objectList.length === 0 || clearData){
+                if(this.objectList.length === 0){
                     this.objectList = response.data;
                 }else{
                     response.data.forEach( function (item) {
@@ -211,8 +234,6 @@
                 }
                 this.count = response.count;
                 this.searchData.lastindex = this.lastIndex;
-
-                this.getUnique();
             },
             changeText: function(){
                 if(this.count === 1){
@@ -224,7 +245,7 @@
                 }
             },
             loadMore: function(){
-                this.axios.post('/rent/getObjects', this.searchData).then(response => {
+                this.axios.post('/sale/getObjects', this.searchData).then(response => {
                     this.fetchResponseData(response.data);
                 });
             },
@@ -255,7 +276,6 @@
         beforeDestroy () {
             window.removeEventListener('scroll', this.handleScroll);
         }
-
     }
 </script>
 

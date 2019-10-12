@@ -56,11 +56,13 @@ class Service extends Model
     }
 
     public static function getImage($id){
-        $full_path = Storage::files('images/service/'.$id)[0];
-        $full_path = Storage::path($full_path);
-        $base64 = base64_encode(Storage::get(Storage::files('images/service/1')[0]));
-        $image_data = 'data:'.mime_content_type($full_path) . ';base64,' . $base64;
-        return $image_data;
+        if(sizeof(Storage::files('public/images/service/'.$id)) > 0){
+            $path = Storage::files('public/images/service/'.$id)[0];
+            $path = substr($path, 7);
+            return "/storage/$path";
+        }else{
+            return null;
+        }
     }
 
     public static function getPrice($price, $curr){

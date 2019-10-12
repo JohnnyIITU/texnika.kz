@@ -56,11 +56,14 @@ class Rent extends Model
     }
 
     public static function getImage($id){
-        $path = Storage::files('images/rent/'.$id)[0];
-        $full_path = Storage::path($path);
-        $base64 = base64_encode(Storage::get($path));
-        $image_data = 'data:'.mime_content_type($full_path) . ';base64,' . $base64;
-        return $image_data;
+        if(sizeof(Storage::files('public/images/rent/'.$id)) > 0){
+            $path = Storage::files('public/images/rent/'.$id)[0];
+            $path = substr($path, 7);
+            return "/storage/$path";
+        }else{
+            return null;
+        }
+
     }
 
     public static function getPrice($price, $curr){
@@ -81,5 +84,22 @@ class Rent extends Model
         }
         return $text;
 
+    }
+
+    public function getImages(){
+        $result = [];
+        if(sizeof(Storage::files('public/images/rent/'.$this->id)) > 0){
+            $path = Storage::files('public/images/rent/'.$this->id);
+            foreach ($path as $img){
+                $img = substr($img, 7);
+                array_push($result, (string)"/storage/{$img}");
+            }
+        }
+        return $result;
+    }
+
+    public function getMarkAndModelLabel(){
+        $mark = Mark::find($this->mark)->value ?? "";
+        return "$mark $this->model";
     }
 }

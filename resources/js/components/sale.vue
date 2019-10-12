@@ -57,6 +57,11 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <select class="form-control select-css" v-model="condition">
+                            <option v-for="key in conditionOptions" :value="key.key">{{key.label}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <input type="text" class="form-control" name="phone" placeholder="Номер телефона" v-model="phone">
                     </div>
                     <div class="form-group">
@@ -113,6 +118,7 @@
                 mark: 1,
                 model: '',
                 year: 2010,
+                condition: 1,
                 price : null,
                 curr : 1,
                 phone: '',
@@ -121,6 +127,7 @@
                 yearOptions: [],
                 cityOptions: [],
                 typeOptions: [],
+                conditionOptions: [],
                 description: '',
             }
         },
@@ -129,6 +136,7 @@
             this.getTypeOptions();
             this.getMarkOptions();
             this.getYearOptions();
+            this.getConditionOptions();
         },
         methods: {
             getCityOptions: function () {
@@ -149,6 +157,12 @@
             getYearOptions: function () {
                 this.axios.post('/getYearList', {}).then((response) => {
                     this.yearOptions = response.data;
+                });
+            },
+            getConditionOptions: function () {
+                this.axios.post('/sale/getConditionOptions', {}).then(response => {
+                    response.data.splice(3,1);
+                    this.conditionOptions = response.data;
                 });
             },
             trashSave: function() {
@@ -184,6 +198,7 @@
                 formData.append('email', this.email);
                 formData.append('price', this.price);
                 formData.append('curr', this.curr);
+                formData.append('condition', this.condition);
                 formData.append('description', this.description);
 
                 return formData;

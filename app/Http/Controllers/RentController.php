@@ -41,7 +41,7 @@ class RentController extends Controller
 
         try {
             if ($request->images) {
-                $path = "/images/rent/{$model->id}/";
+                $path = "public/images/rent/{$model->id}/";
                 Storage::makeDirectory($path);
                 foreach ($request->images as $image) {
                     $image->store($path);
@@ -88,7 +88,7 @@ class RentController extends Controller
 
         try {
             if ($request->images) {
-                $path = "/images/rent/{$model->id}/";
+                $path = "public/images/rent/{$model->id}/";
                 Storage::makeDirectory($path);
                 foreach ($request->images as $image) {
                     $image->store($path);
@@ -116,9 +116,6 @@ class RentController extends Controller
         $pageData = [];
         $last_index = $request->lastindex ?? 0;
         $condition = [];
-        if($last_index != 0){
-            array_push($condition, ['id', '<', $last_index]);
-        }
         if($request->city != 0){
             array_push($condition, ['city',$request->city]);
         }
@@ -135,6 +132,9 @@ class RentController extends Controller
             array_push($condition, ['price','<', $request->priceTo]);
         }
         $count = sizeof(Rent::where($condition)->get());
+        if($last_index != 0){
+            array_push($condition, ['id', '<', $last_index]);
+        }
         $objects = Rent::where($condition)
             ->orderBy('id', 'desc')
             ->paginate(9);
@@ -145,18 +145,23 @@ class RentController extends Controller
                 'price' => Rent::getPrice($rent->price, $rent->curr),
                 'city' => City::getCityById($rent->city),
                 'date' => Rent::getDate($rent->created_at),
-                'image_data' => Rent::getImage($rent->id),
+                'image_data' => Rent::getISamage($rent->id),
                 'description' => $rent->description
             ]);
-            $last_index = $rent->id < $last_index ? $rent->id : $last_index;
+            $last_index = ($rent->id < $last_index || $last_index === 0) ? $rent->id : $last_index;
         }
-
         $result = [
-            'data' => $pageData,
+            'data' => array_reverse($pageData),
             'last_index' => $last_index,
             'count' => $count,
         ];
 
         return response()->json($result)->withCallback($request->input('callback'));
+    }
+
+    public function view($id){
+        $info = Rent::findOrFail($id);
+        $imageUrl = $info->getImages();
+        return view('rent.view', compact('info'), compact('imageUrl'));
     }
 }

@@ -12,6 +12,11 @@ class Sale extends Model
     const STATUS_TYPE_DEACTIVE = 'deactive';
     const STATUS_TYPE_TRASH = 'trash';
 
+    const CONDITION_STATE_NEW = 1;
+    const CONDITION_STATE_MILEAGE = 2;
+    const CONDITION_STATE_EMERGENCY = 3;
+    const CONDITION_STATE_ANY = null;
+
     public static function getActiveAndNewOrders(){
         $sales = self::where('status', self::STATUS_TYPE_ACTIVE)
             ->limit(3)
@@ -56,11 +61,13 @@ class Sale extends Model
     }
 
     public static function getImage($id){
-        $path = Storage::files('images/sale/'.$id)[0];
-        $full_path = Storage::path($path);
-        $base64 = base64_encode(Storage::get($path));
-        $image_data = 'data:'.mime_content_type($full_path) . ';base64,' . $base64;
-        return $image_data;
+        if(sizeof(Storage::files('public/images/sale/'.$id)) > 0){
+            $path = Storage::files('public/images/sale/'.$id)[0];
+            $path = substr($path, 7);
+            return "/storage/$path";
+        }else{
+            return null;
+        }
     }
 
     public static function getPrice($price, $curr){
@@ -81,5 +88,14 @@ class Sale extends Model
         }
         return $text;
 
+    }
+
+    public function getConditionOptions(){
+        return [
+            self::CONDITION_STATE_NEW => 'Новая',
+            self::CONDITION_STATE_MILEAGE => 'С пробегом',
+            self::CONDITION_STATE_EMERGENCY => 'Аварийное',
+            self::CONDITION_STATE_ANY => 'Любое',
+        ];
     }
 }

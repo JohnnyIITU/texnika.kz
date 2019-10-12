@@ -17,6 +17,9 @@ Vue.component('sale', require('./components/sale.vue').default);
 Vue.component('service', require('./components/service.vue').default);
 
 Vue.component('rent-search', require('./components/rent-search').default);
+Vue.component('sale-search', require('./components/sale-search').default);
+
+Vue.component('rent-view', require('./components/rent-view').default);
 
 Vue.component('upload-image', require('./components/upload_image').default);
 

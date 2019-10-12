@@ -39,7 +39,7 @@ class ServiceController extends Controller
 
         try {
             if ($request->images) {
-                $path = "/images/service/{$model->id}/";
+                $path = "/public/images/service/{$model->id}/";
                 Storage::makeDirectory($path);
                 foreach ($request->images as $image) {
                     $image->store($path);
@@ -86,7 +86,7 @@ class ServiceController extends Controller
 
         try {
             if ($request->images) {
-                $path = "/images/service/{$model->id}/";
+                $path = "/public/images/service/{$model->id}/";
                 Storage::makeDirectory($path);
                 foreach ($request->images as $image) {
                     $image->store($path);
