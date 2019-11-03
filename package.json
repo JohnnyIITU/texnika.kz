@@ -20,6 +20,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "v-mask": "^2.0.2",
         "vue": "^2.6.10",
         "vue-axios": "^2.1.4"
     }

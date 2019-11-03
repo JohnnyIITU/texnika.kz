@@ -6,7 +6,11 @@ import axios from 'axios'
 
 import VueAxios from 'vue-axios'
 
+import VueMask from 'v-mask'
+
 Vue.use(VueAxios, axios);
+
+Vue.use(VueMask);
 
 Vue.component('register', require('./components/registration/register.vue').default);
 

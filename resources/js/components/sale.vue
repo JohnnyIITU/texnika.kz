@@ -62,10 +62,10 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="phone" placeholder="Номер телефона" v-model="phone">
+                        <input type="text" class="form-control" name="phone" v-mask="'+7(7##)###-##-##'" placeholder="Номер телефона" v-model="phone">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="email" placeholder="Email" v-model="email">
+                        <input type="email" class="form-control" name="email" placeholder="Email" v-model="email">
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-9 col-8 mb-lg-0">
@@ -207,6 +207,10 @@
                 formData.append('description', this.description);
                 formData.append('preview', this.files[this.activeIndex]);
                 return formData;
+            },
+            validEmail: function (email) {
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
             }
         },
         watch: {

@@ -193,9 +193,9 @@
                                             Подать объявление
                                         </a>
                                         <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Продажа</a>
-                                            <a class="dropdown-item" href="#">Аренда</a>
-                                            <a class="dropdown-item" href="#">Обслуживание</a>
+                                            <a class="dropdown-item" href="/sale">Продажа</a>
+                                            <a class="dropdown-item" href="/rent">Аренда</a>
+                                            <a class="dropdown-item" href="/services">Обслуживание</a>
                                         </div>
                                     </div>
                                 </li>

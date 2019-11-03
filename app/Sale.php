@@ -71,7 +71,7 @@ class Sale extends Model
             $path = substr($previewPath, 7);
             return "/storage/$path";
         }else{
-            return null;
+            return "https://www.namepros.com/a/2018/05/106343_82907bfea9fe97e84861e2ee7c5b4f5b.png";
         }
     }
 
@@ -112,6 +112,8 @@ class Sale extends Model
                 $img = substr($img, 7);
                 array_push($result, (string)"/storage/{$img}");
             }
+        }else{
+            $result = ["https://www.namepros.com/a/2018/05/106343_82907bfea9fe97e84861e2ee7c5b4f5b.png"];
         }
         return $result;
     }
