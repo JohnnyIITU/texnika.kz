@@ -74,9 +74,6 @@
                         <div class="form-group col-lg-3 col-4 mb-lg-0">
                             <select class="form-control select-css" name="currency" v-model="curr">
                                 <option value="1">KZT</option>
-                                <option value="2">USD</option>
-                                <option value="3">EUR</option>
-                                <option value="4">RUB</option>
                             </select>
                         </div>
                     </div>
@@ -90,6 +87,7 @@
             <upload-image
                 :files="files"
                 :images="images"
+                :activeIndex.sync="activeIndex"
             ></upload-image>
             <!-- end row -->
             <!-- begin row -->
@@ -108,9 +106,10 @@
 
 <script>
     export default {
-        name: "rent",
+        name: "sale",
         data() {
             return {
+                activeIndex: 0,
                 files: [],
                 images: [],
                 city: 1,
@@ -171,9 +170,13 @@
                 });
             },
             save: function () {
-                this.axios.post('/sale/save', this.createResponseData()).then((response) => {
-                    this.fetchResponse(response.data)
-                });
+                this.axios.post('/sale/save', this.createResponseData())
+                    .then((response) => {
+                        this.fetchResponse(response.data)
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
             },
             fetchResponse: function(response) {
                 if(response.error){
@@ -186,7 +189,9 @@
                 const formData = new FormData;
 
                 this.files.forEach(file => {
-                    formData.append('images[]', file, file.name);
+                    if(file !== this.files[this.activeIndex]) {
+                        formData.append('images[]', file, file.name);
+                    }
                 });
 
                 formData.append('mark', this.mark);
@@ -200,7 +205,7 @@
                 formData.append('curr', this.curr);
                 formData.append('condition', this.condition);
                 formData.append('description', this.description);
-
+                formData.append('preview', this.files[this.activeIndex]);
                 return formData;
             }
         },

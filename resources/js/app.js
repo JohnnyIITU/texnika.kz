@@ -18,8 +18,11 @@ Vue.component('service', require('./components/service.vue').default);
 
 Vue.component('rent-search', require('./components/rent-search').default);
 Vue.component('sale-search', require('./components/sale-search').default);
+Vue.component('service-search', require('./components/service-search').default);
 
 Vue.component('rent-view', require('./components/rent-view').default);
+Vue.component('sale-view', require('./components/sale-view').default);
+Vue.component('service-view', require('./components/service-view').default);
 
 Vue.component('upload-image', require('./components/upload_image').default);
 

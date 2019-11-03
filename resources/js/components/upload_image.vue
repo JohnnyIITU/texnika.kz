@@ -20,7 +20,7 @@
             <!--<div class="input-file-preview"></div>-->
         <!--</div>-->
         <div class="col-6 col-sm-4 col-lg-2 mb-4" v-for="(image, index) in images" :key="index">
-            <div class="input-file-preview">
+            <div class="input-file-preview" @click="setActive(index)" :class="{'active-image' : index === activeIndex}">
                 <img :src="image"/>
             </div>
         </div>
@@ -38,8 +38,6 @@
         name: "upload_image",
         data() {
             return {
-                // images: [],
-                // files: [],
                 type: '',
                 isCreated: false,
             }
@@ -56,7 +54,13 @@
                 default () {
                     return []
                 }
-            }
+            },
+            activeIndex : {
+                type: Number,
+                default() {
+                    return []
+                }
+            },
         },
         methods: {
             onInputChange: function (e) {
@@ -78,6 +82,10 @@
             upload: function(){
                 // this.$emit('images', this.images);
                 // this.$emit('files', this.files);
+            },
+            setActive (index) {
+                this.$parent.activeIndex = index;
+                // this.activeIndex = index
             }
         },
         watch: {

@@ -20,7 +20,7 @@ class Sale extends Model
     public static function getActiveAndNewOrders(){
         $sales = self::where('status', self::STATUS_TYPE_ACTIVE)
             ->limit(3)
-            ->orderBy('created_at')
+            ->orderBy('created_at', 'desc')
             ->latest()
             ->get();
         $result = [];
@@ -62,8 +62,13 @@ class Sale extends Model
 
     public static function getImage($id){
         if(sizeof(Storage::files('public/images/sale/'.$id)) > 0){
-            $path = Storage::files('public/images/sale/'.$id)[0];
-            $path = substr($path, 7);
+            $path = Storage::files('public/images/sale/'.$id);
+            $previewPath = $path[0];
+            foreach ($path as $file) {
+                if(strpos($file, 'preview'))
+                    $previewPath = $file;
+            }
+            $path = substr($previewPath, 7);
             return "/storage/$path";
         }else{
             return null;
@@ -98,4 +103,22 @@ class Sale extends Model
             self::CONDITION_STATE_ANY => 'Любое',
         ];
     }
+
+    public function getImages(){
+        $result = [];
+        if(sizeof(Storage::files('public/images/sale/'.$this->id)) > 0){
+            $path = Storage::files('public/images/sale/'.$this->id);
+            foreach ($path as $img){
+                $img = substr($img, 7);
+                array_push($result, (string)"/storage/{$img}");
+            }
+        }
+        return $result;
+    }
+
+    public function getMarkAndModelLabel(){
+        $mark = Mark::find($this->mark)->value ?? "";
+        return "$mark $this->model";
+    }
+
 }

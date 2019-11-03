@@ -57,8 +57,13 @@ class Service extends Model
 
     public static function getImage($id){
         if(sizeof(Storage::files('public/images/service/'.$id)) > 0){
-            $path = Storage::files('public/images/service/'.$id)[0];
-            $path = substr($path, 7);
+            $path = Storage::files('public/images/service/'.$id);
+            $previewPath = $path[0];
+            foreach ($path as $file) {
+                if(strpos($file, 'preview'))
+                    $previewPath = $file;
+            }
+            $path = substr($previewPath, 7);
             return "/storage/$path";
         }else{
             return null;
@@ -84,4 +89,22 @@ class Service extends Model
         return $text;
 
     }
+
+    public function getImages(){
+        $result = [];
+        if(sizeof(Storage::files('public/images/service/'.$this->id)) > 0){
+            $path = Storage::files('public/images/service/'.$this->id);
+            foreach ($path as $img){
+                $img = substr($img, 7);
+                array_push($result, (string)"/storage/{$img}");
+            }
+        }
+        return $result;
+    }
+
+    public function getMarkAndModelLabel(){
+        $mark = Mark::find($this->mark)->value ?? "";
+        return "$mark $this->model";
+    }
+
 }

@@ -54,7 +54,7 @@
                 <div class="description">
                     <div class="row mb-4">
                         <div class="col-lg-6 mb-2 mb-lg-0">
-                            <span class="description__status">Аренда</span>
+                            <span class="description__status">Обслуживание</span>
                         </div>
                         <!--<div class="col-lg-6 text-lg-right">-->
                             <!--<span class="description__call">Вы не звонили</span>-->
@@ -64,7 +64,8 @@
                     <p class="description__price">{{price}} &#8376;</p>
                     <ul class="description__list mb-5">
                         <li><span>Город :</span> {{city}}</li>
-                        <li><span>Тип :</span> {{type}}</li>
+                        <li><span>Тип техники :</span> {{type}}</li>
+                        <li><span>Тип :</span> {{service}}</li>
                     </ul>
                     <ul class="nav nav-tabs" id="descriptionTab" role="tablist">
                         <li class="nav-item">
@@ -112,6 +113,7 @@
             description : String,
             phone : String,
             email : String,
+            service : String
             // isGuest: Boolean,
             // favourites: Object,
             // userCity: Object,

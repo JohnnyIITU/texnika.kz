@@ -54,7 +54,7 @@
                 <div class="description">
                     <div class="row mb-4">
                         <div class="col-lg-6 mb-2 mb-lg-0">
-                            <span class="description__status">Аренда</span>
+                            <span class="description__status">Продажа</span>
                         </div>
                         <!--<div class="col-lg-6 text-lg-right">-->
                             <!--<span class="description__call">Вы не звонили</span>-->

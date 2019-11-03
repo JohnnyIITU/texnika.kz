@@ -2,7 +2,6 @@
 use App\Sale;
 use App\Rent;
 use App\Service;
-
 ?>
 @extends('layouts.main')
 
@@ -55,7 +54,7 @@ use App\Service;
                                             <a href="#" class="btn btn-warning btn-sm">Подробнее</a>
                                         </div>
                                     </div>
-                                    <a href="{{"/sale/view/{$order['id']}"}}" class="hot-item__overlay-link">Заголовок может быть в одну или две строки</a>
+                                    <a href="{{"/rent/view/{$order['id']}"}}" class="hot-item__overlay-link">Заголовок может быть в одну или две строки</a>
                                 </div>
                             </div>
                         @endforeach
@@ -83,7 +82,7 @@ use App\Service;
                                             <a href="#" class="btn btn-warning btn-sm">Подробнее</a>
                                         </div>
                                     </div>
-                                    <a href="{{"/sale/view/{$order['id']}"}}" class="hot-item__overlay-link">Заголовок может быть в одну или две строки</a>
+                                    <a href="{{"/service/view/{$order['id']}"}}" class="hot-item__overlay-link">Заголовок может быть в одну или две строки</a>
                                 </div>
                             </div>
                         @endforeach
