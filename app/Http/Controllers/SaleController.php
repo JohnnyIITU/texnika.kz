@@ -101,6 +101,7 @@ class SaleController extends Controller
                 foreach ($request->images as $image) {
                     $image->store($path);
                 }
+                $request->preview->storeAs($path, "preview.{$request->preview->extension()}");
             }
         }catch (\Exception $ex){
             $result = [

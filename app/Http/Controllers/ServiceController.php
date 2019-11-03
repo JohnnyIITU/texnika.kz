@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\City;
+use App\Mark;
 use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -24,7 +26,7 @@ class ServiceController extends Controller
         $model = new Service();
         $model->status = Service::STATUS_TYPE_ACTIVE;
         foreach ($request->all() as $key => $value){
-            if($key !== 'images')
+            if($key !== 'images' && $key !== 'preview') $model->$key = $value;
                 $model->$key = $value;
         }
         try{
@@ -44,6 +46,7 @@ class ServiceController extends Controller
                 foreach ($request->images as $image) {
                     $image->store($path);
                 }
+                $request->preview->storeAs($path, "preview.{$request->preview->extension()}");
             }
         }catch (\Exception $ex){
             $result = [
@@ -71,7 +74,7 @@ class ServiceController extends Controller
         $model = new Service();
         $model->status = Service::STATUS_TYPE_TRASH;
         foreach ($request->all() as $key => $value){
-            if($key !== 'images')
+            if($key !== 'images' && $key !== 'preview') $model->$key = $value;
                 $model->$key = $value;
         }
         try{
@@ -91,6 +94,7 @@ class ServiceController extends Controller
                 foreach ($request->images as $image) {
                     $image->store($path);
                 }
+                $request->preview->storeAs($path, "preview.{$request->preview->extension()}");
             }
         }catch (\Exception $ex){
             $result = [

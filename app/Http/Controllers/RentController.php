@@ -26,8 +26,7 @@ class RentController extends Controller
         $model = new Rent();
         $model->status = Rent::STATUS_TYPE_ACTIVE;
         foreach ($request->all() as $key => $value){
-            if($key !== 'images')
-            $model->$key = $value;
+                if($key !== 'images' && $key !== 'preview') $model->$key = $value;
         }
         try{
             $model->save();
@@ -46,6 +45,7 @@ class RentController extends Controller
                 foreach ($request->images as $image) {
                     $image->store($path);
                 }
+                $request->preview->storeAs($path, "preview.{$request->preview->extension()}");
             }
         }catch (\Exception $ex){
             $result = [
@@ -73,7 +73,7 @@ class RentController extends Controller
         $model = new Rent();
         $model->status = Rent::STATUS_TYPE_TRASH;
         foreach ($request->all() as $key => $value){
-            if($key !== 'images')
+            if($key !== 'images' && $key !== 'preview') $model->$key = $value;
                 $model->$key = $value;
         }
         try{
@@ -93,6 +93,7 @@ class RentController extends Controller
                 foreach ($request->images as $image) {
                     $image->store($path);
                 }
+                $request->preview->storeAs($path, "preview.{$request->preview->extension()}");
             }
         }catch (\Exception $ex){
             $result = [
