@@ -49,3 +49,14 @@ Route::get('/test', function (){
 Route::get('/testAuth', function (){
     dd(Auth::check());
 });
+
+Route::get('mark', function (){
+    return view('addmark');
+});
+
+Route::post('mark', function(){
+    $mark = $_POST['mark'];
+    $model = new \App\Mark();
+    $model->value = $mark;
+    $model->save();
+});
