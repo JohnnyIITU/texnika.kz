@@ -7,7 +7,9 @@ use App\Mark;
 use App\Sale;
 use Faker\Provider\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class SaleController extends Controller
 {
@@ -15,6 +17,11 @@ class SaleController extends Controller
         return view('sale.create');
     }
 
+    /**
+     * @param Request $request
+     * @param UploadedFile $image
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function save(Request $request){
         if($request->email === null && $request->phone === null){
             $result = [
@@ -27,7 +34,7 @@ class SaleController extends Controller
         $model = new Sale();
         $model->status = Sale::STATUS_TYPE_ACTIVE;
         foreach ($request->all() as $key => $value){
-            if($key !== 'images') $model->$key = $value;
+            if($key !== 'images' && $key !== 'preview') $model->$key = $value;
         }
         try{
             $model->save();
@@ -46,6 +53,7 @@ class SaleController extends Controller
                 foreach ($request->images as $image) {
                     $image->store($path);
                 }
+                $request->preview->storeAs($path, "preview.{$request->preview->extension()}");
             }
         }catch (\Exception $ex){
             $result = [
@@ -174,4 +182,9 @@ class SaleController extends Controller
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
+    public function view($id){
+        $info = Sale::findOrFail($id);
+        $imageUrl = $info->getImages();
+        return view('sale.view', compact('info'), compact('imageUrl'));
+    }
 }

@@ -57,13 +57,17 @@ class Rent extends Model
 
     public static function getImage($id){
         if(sizeof(Storage::files('public/images/rent/'.$id)) > 0){
-            $path = Storage::files('public/images/rent/'.$id)[0];
-            $path = substr($path, 7);
+            $path = Storage::files('public/images/rent/'.$id);
+            $previewPath = $path[0];
+            foreach ($path as $file) {
+                if(strpos($file, 'preview'))
+                    $previewPath = $file;
+            }
+            $path = substr($previewPath, 7);
             return "/storage/$path";
         }else{
             return null;
         }
-
     }
 
     public static function getPrice($price, $curr){

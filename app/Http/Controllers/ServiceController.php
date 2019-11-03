@@ -105,7 +105,65 @@ class ServiceController extends Controller
         ];
         return response()->json($result)->withCallback($request->input('callback'));
     }
+
+    public function index(){
+        return view('service.search');
+    }
+
+    public function view($id){
+        $info = Service::findOrFail($id);
+        $imageUrl = $info->getImages();
+        return view('service.view', compact('info'), compact('imageUrl'));
+    }
+
+    public function getObjects(Request $request){
+        $pageData = [];
+        $last_index = $request->lastindex ?? 0;
+        $condition = [];
+        if($request->city != 0){
+            array_push($condition, ['city',$request->city]);
+        }
+        if($request->mark != 0){
+            array_push($condition, ['mark',$request->mark]);
+        }
+        if($request->type != 0){
+            array_push($condition, ['type',$request->type]);
+        }
+        if($request->priceFrom != 0){
+            array_push($condition, ['price','>', $request->priceFrom]);
+        }
+        if($request->priceTo != 0){
+            array_push($condition, ['price','<', $request->priceTo]);
+        }
+        if($request->condition != 0){
+            array_push($condition, ['condition','<', $request->condition]);
+        }
+        $count = sizeof(Service::where($condition)->get());
+        if($last_index != 0){
+            array_push($condition, ['id', '<', $last_index]);
+        }
+        $objects = Service::where($condition)
+            ->orderBy('id', 'desc')
+            ->paginate(9);
+        foreach ($objects as $Service){
+            array_push($pageData, [
+                'id' => $Service->id,
+                'title' => Mark::getMarkById($Service->mark).' '.$Service->model,
+                'price' => Service::getPrice($Service->price, $Service->curr),
+                'city' => City::getCityById($Service->city),
+                'date' => Service::getDate($Service->created_at),
+                'image_data' => Service::getImage($Service->id),
+                'description' => $Service->description
+            ]);
+            $last_index = ($Service->id < $last_index || $last_index === 0) ? $Service->id : $last_index;
+        }
+        $result = [
+            'data' => array_reverse($pageData),
+            'last_index' => $last_index,
+            'count' => $count,
+        ];
+
+        return response()->json($result)->withCallback($request->input('callback'));
+    }
 }
-
-
 ?>
