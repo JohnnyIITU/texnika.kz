@@ -182,9 +182,9 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ml-auto align-items-lg-center">
                                 <li class="nav-item active"><a class="nav-link" href="/">Главная</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Продажа</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Аренда</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Обслуживание</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/sale">Продажа</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/rent">Аренда</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/service">Обслуживание</a></li>
                                 <li class="nav-item">
                                     <div class="dropdown ml-lg-4">
                                         <a href="#" role="button" id="dropdownMenuButton"

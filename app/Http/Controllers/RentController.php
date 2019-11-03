@@ -137,7 +137,8 @@ class RentController extends Controller
         }
         $objects = Rent::where($condition)
             ->orderBy('id', 'desc')
-            ->paginate(9);
+            ->limit(9)
+            ->get();
         foreach ($objects as $rent){
             array_push($pageData, [
                 'id' => $rent->id,

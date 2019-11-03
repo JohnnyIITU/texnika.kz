@@ -144,7 +144,8 @@ class ServiceController extends Controller
         }
         $objects = Service::where($condition)
             ->orderBy('id', 'desc')
-            ->paginate(9);
+            ->limit(9)
+            ->get();
         foreach ($objects as $Service){
             array_push($pageData, [
                 'id' => $Service->id,

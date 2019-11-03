@@ -6,7 +6,7 @@
                     <div class="row ml-0 mr-0 align-items-stretch">
                         <div class="col-lg-3 pl-0 pr-0 position-static">
                             <div class="dropdown position-static h-100">
-                                <a href="#" class="filter-button" role="button" id="dropdownRegionLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить фильтр по <span>{{cityLabel}}</span></a>
+                                <a href="#" class="filter-button" role="button" id="dropdownRegionLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Местоположение<span>{{cityLabel}}</span></a>
                                 <div class="dropdown-menu dropdown-menu--filter" aria-labelledby="dropdownRegionLink">
                                     <ul class="filter-list filter-list--column-5">
                                         <li class="filter-list__item" :class="item.class" @click="changeCityKey(item.key)" v-for="item in cityOptions" :key="item.key"><a href="#">{{item.label}}</a></li>
@@ -16,7 +16,7 @@
                         </div>
                         <div class="col-lg-3 pl-0 pr-0 position-static">
                             <div class="dropdown position-static h-100">
-                                <a href="#" class="filter-button" role="button" id="dropdownBrandLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить фильтр по <span>{{typeLabel}}</span></a>
+                                <a href="#" class="filter-button" role="button" id="dropdownBrandLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Тип техники<span>{{typeLabel}}</span></a>
                                 <div class="dropdown-menu dropdown-menu--filter" aria-labelledby="dropdownBrandLink">
                                     <ul class="filter-list filter-list--column-5">
                                         <li class="filter-list__item" :class="item.class" @click="changeTypeKey(item.key)" v-for="item in typeOptions"><a href="#">{{item.label}}</a></li>
@@ -26,7 +26,7 @@
                         </div>
                         <div class="col-lg-3 pl-0 pr-0 position-static">
                             <div class="dropdown position-static h-100">
-                                <a href="#" class="filter-button" role="button" id="dropdownTypeLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить фильтр по <span>{{markLabel}}</span></a>
+                                <a href="#" class="filter-button" role="button" id="dropdownTypeLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Марка<span>{{markLabel}}</span></a>
                                 <div class="dropdown-menu dropdown-menu--filter" aria-labelledby="dropdownTypeLink">
                                     <ul class="filter-list filter-list--column-4">
                                         <li class="filter-list__item" :class="item.class" v-for="item in markOptions" @click="changeMarkKey(item.key)"><a href="#">{{item.label}}</a></li>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-lg-3 pl-0 pr-0 position-static">
                             <div class="dropdown h-100">
-                                <a href="#" class="filter-button" role="button" id="dropdownStatusLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить фильтр по <span>{{conditionLabel}}</span></a>
+                                <a href="#" class="filter-button" role="button" id="dropdownStatusLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Состояние<span>{{conditionLabel}}</span></a>
                                 <div class="dropdown-menu dropdown-menu--filter" aria-labelledby="dropdownStatusLink">
                                     <ul class="filter-list">
                                         <li class="filter-list__item" :class="item.class" v-for="item in conditionOptions" @click="changeConditionKey(item.key)"><a href="#">{{item.label}}</a></li>
@@ -61,7 +61,7 @@
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <button type="submit" @click="search" class="btn btn-warning btn-block btn-sm">Поиск</button>
+                            <button type="submit" @click="searchWithReset" class="btn btn-warning btn-block btn-sm">Поиск</button>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                                 <i class="item__star current"></i>
                                 <div class="item__price-first">{{item.price}}</div>
                                 <div class="item__content">
-                                    <span class="item__info">Вы звонили</span>
+                                    <!--<span class="item__info">Вы звонили</span>-->
                                     <div class="item__price">{{item.price}}</div>
                                     <div class="item__excerpt">{{item.description.substring(0,150)}}</div>
                                     <div class="item__meta">{{item.city}}, {{item.date}}</div>
@@ -90,7 +90,7 @@
                     <!-- end col -->
                 </div>
                 <!-- end row -->
-                <a @click="loadMore()" class="btn btn-secondary btn-block btn-lg mt-5"><img src="/images/close.png" alt="close"></a>
+                <a @click="loadMore()" v-if="!allPostShown" class="btn btn-secondary btn-block btn-lg mt-5"><img src="/images/close.png" alt="close"></a>
             </section>
         </div>
     </main>
@@ -116,11 +116,13 @@
                 conditionOptions: [],
                 text: 'Объявлении',
                 count : 0,
-                cityLabel: 'Местоположение',
-                markLabel: 'Марка техники',
-                typeLabel: 'Тип техники',
-                conditionLabel: "Состояние",
+                cityLabel: 'Не выбрано',
+                markLabel: 'Не выбрано',
+                typeLabel: 'Не выбрано',
+                conditionLabel: "Не выбрано",
                 bottomOfWindow: 0,
+                allPostShown: false,
+                objectIds: [],
 
             }
         },
@@ -135,21 +137,41 @@
             getCityOptions: function () {
                 this.axios.post('/getCityList', {}).then((response) => {
                     this.cityOptions = response.data;
+                    this.cityOptions.unshift({
+                        class : "current",
+                        key : 0,
+                        label : "Не выбрано"
+                    })
                 });
             },
             getTypeOptions: function () {
                 this.axios.post('/getTypeList', {}).then((response) => {
                     this.typeOptions = response.data;
+                    this.typeOptions.unshift({
+                        class : "current",
+                        key : 0,
+                        label : "Не выбрано"
+                    })
                 });
             },
             getMarkOptions: function () {
                 this.axios.post('/getMarkList', {}).then((response) => {
                     this.markOptions = response.data;
+                    this.markOptions.unshift({
+                        class : "current",
+                        key : 0,
+                        label : "Не выбрано"
+                    })
                 });
             },
             getConditionOptions: function () {
                 this.axios.post('/sale/getConditionOptions', {}).then(response => {
                     this.conditionOptions = response.data;
+                    this.conditionOptions.unshift({
+                        class : "current",
+                        key : 0,
+                        label : "Не выбрано"
+                    })
                 });
             },
             changeCityKey: function (key) {
@@ -225,13 +247,15 @@
             fetchResponseData: function (response, clearData = false) {
                 this.lastIndex = response.last_index;
                 var vm = this;
-                if(this.objectList.length === 0){
-                    this.objectList = response.data;
-                }else{
-                    response.data.forEach( function (item) {
-                        vm.objectList.push(item);
-                    });
+                if(response.data.length < 9) {
+                    this.allPostShown = true;
                 }
+                response.data.forEach( function (item) {
+                    if(!vm.objectIds.includes(item.id)){
+                        vm.objectIds.push(item.id);
+                        vm.objectList.push(item);
+                    }
+                });
                 this.count = response.count;
                 this.searchData.lastindex = this.lastIndex;
             },
@@ -255,15 +279,9 @@
                     this.loadMore()
                 }
             },
-            getUnique () {
-                var arr = this.objectList;
-                var comp = 'id';
-                const unique = this.objectList
-                    .map(e => e[comp])
-                    .map((e, i, final) => final.indexOf(e) === i && i)
-                    .filter(e => arr[e]).map(e => arr[e]);
-
-                this.objectList = unique;
+            searchWithReset() {
+                this.resetKeys()
+                this.search()
             }
         },
         watch: {

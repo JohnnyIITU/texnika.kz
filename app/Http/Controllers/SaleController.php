@@ -160,7 +160,8 @@ class SaleController extends Controller
         }
         $objects = Sale::where($condition)
             ->orderBy('id', 'desc')
-            ->paginate(9);
+            ->limit(9)
+            ->get();
         foreach ($objects as $Sale){
             array_push($pageData, [
                 'id' => $Sale->id,
