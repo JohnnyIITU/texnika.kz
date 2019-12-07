@@ -11,6 +11,11 @@ class Rent extends Model
     const STATUS_TYPE_ACTIVE = 'active';
     const STATUS_TYPE_DEACTIVE = 'deactive';
     const STATUS_TYPE_TRASH = 'trash';
+    public $statuses = [
+        self::STATUS_TYPE_ACTIVE => 'Активен',
+        self::STATUS_TYPE_DEACTIVE => 'Окончен',
+        self::STATUS_TYPE_TRASH => 'В черновиках',
+    ];
 
     public static function getActiveAndNewOrders(){
         $rents = self::where('status', self::STATUS_TYPE_ACTIVE)
@@ -107,5 +112,14 @@ class Rent extends Model
     public function getMarkAndModelLabel(){
         $mark = Mark::find($this->mark)->value ?? "";
         return "$mark $this->model";
+    }
+
+    public static function getStatusLabel($status){
+        $statuses = [
+            self::STATUS_TYPE_ACTIVE => 'Активен',
+            self::STATUS_TYPE_DEACTIVE => 'Окончен',
+            self::STATUS_TYPE_TRASH => 'В черновиках',
+        ];
+        return $statuses[$status];
     }
 }
