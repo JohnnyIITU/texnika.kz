@@ -30,7 +30,7 @@ class SaleController extends Controller
             ];
             return response()->json($result)->withCallback($request->input('callback'));
         }
-
+        DB::beginTransaction();
         $model = new Sale();
         $model->status = Sale::STATUS_TYPE_ACTIVE;
         foreach ($request->all() as $key => $value){
@@ -53,13 +53,18 @@ class SaleController extends Controller
                 foreach ($request->images as $image) {
                     $image->store($path);
                 }
-                $request->preview->storeAs($path, "preview.{$request->preview->extension()}");
+                $data = substr($request->preview, strpos($request->preview, ',') + 1);
+
+                $data = base64_decode($data);
+                Storage::disk('local')->put($path.'preview.png', $data);
             }
+            DB::commit();
         }catch (\Exception $ex){
             $result = [
                 'error' => true,
                 'error_text' => $ex->getMessage()
             ];
+            DB::rollBack();
             return response()->json($result)->withCallback($request->input('callback'));
         }
         $result = [
@@ -137,6 +142,7 @@ class SaleController extends Controller
         $pageData = [];
         $last_index = $request->lastindex ?? 0;
         $condition = [];
+        array_push($condition, ['status' , Sale::STATUS_TYPE_ACTIVE]);
         if($request->city != 0){
             array_push($condition, ['city',$request->city]);
         }
@@ -147,14 +153,15 @@ class SaleController extends Controller
             array_push($condition, ['type',$request->type]);
         }
         if($request->priceFrom != 0){
-            array_push($condition, ['price','>', $request->priceFrom]);
+            array_push($condition, ['price','>', (int)$request->priceFrom]);
         }
         if($request->priceTo != 0){
-            array_push($condition, ['price','<', $request->priceTo]);
+            array_push($condition, ['price','<', (int)$request->priceTo]);
         }
         if($request->condition != 0){
             array_push($condition, ['condition','<', $request->condition]);
         }
+        $keyWord = $request->keyWords;
         $count = sizeof(Sale::where($condition)->get());
         if($last_index != 0){
             array_push($condition, ['id', '<', $last_index]);
@@ -164,19 +171,36 @@ class SaleController extends Controller
             ->limit(9)
             ->get();
         foreach ($objects as $Sale){
-            array_push($pageData, [
-                'id' => $Sale->id,
-                'title' => Mark::getMarkById($Sale->mark).' '.$Sale->model,
-                'price' => Sale::getPrice($Sale->price, $Sale->curr),
-                'city' => City::getCityById($Sale->city),
-                'date' => Sale::getDate($Sale->created_at),
-                'image_data' => Sale::getImage($Sale->id),
-                'description' => $Sale->description
-            ]);
-            $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
+            if($keyWord !== null){
+                if($this->checkKeyWord($keyWord, $Sale)){
+                    array_push($pageData, [
+                        'id' => $Sale->id,
+                        'title' => Mark::getMarkById($Sale->mark).' '.$Sale->model,
+                        'price' => Sale::getPrice($Sale->price, $Sale->curr),
+                        'city' => City::getCityById($Sale->city),
+                        'date' => Sale::getDate($Sale->created_at),
+                        'image_data' => Sale::getImage($Sale->id),
+                        'description' => $Sale->description
+                    ]);
+                    $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
+                }else{
+                    $count--;
+                }
+            }else{
+                array_push($pageData, [
+                    'id' => $Sale->id,
+                    'title' => Mark::getMarkById($Sale->mark).' '.$Sale->model,
+                    'price' => Sale::getPrice($Sale->price, $Sale->curr),
+                    'city' => City::getCityById($Sale->city),
+                    'date' => Sale::getDate($Sale->created_at),
+                    'image_data' => Sale::getImage($Sale->id),
+                    'description' => $Sale->description
+                ]);
+                $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
+            }
         }
         $result = [
-            'data' => array_reverse($pageData),
+            'data' => $pageData,
             'last_index' => $last_index,
             'count' => $count,
         ];
@@ -188,5 +212,16 @@ class SaleController extends Controller
         $info = Sale::findOrFail($id);
         $imageUrl = $info->getImages();
         return view('sale.view', compact('info'), compact('imageUrl'));
+    }
+
+    public function checkKeyWord($word, $model){
+        $word = strtolower($word);
+        $title = Mark::getMarkById($model->mark).' '.$model->model;
+        $descriptions = $model->description;
+        if(strpos(strtolower(" ".$title), $word)|| strpos(strtolower(" ".$descriptions), $word)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

@@ -89,6 +89,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'texnika.kz')], function () {
     Route::get('/service/', 'ServiceController@index');
     Route::post('/service/save', 'ServiceController@save');
     Route::post('/service/saveToTrash', 'ServiceController@saveToTrash');
+    Route::post('/service/getObjects', 'ServiceController@getObjects');
 
     Route::get('/test', function () {
         dd((new \App\Sale())->getConditionOptions());

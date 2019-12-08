@@ -15,7 +15,7 @@ class Service extends Model
     public static function getActiveAndNewOrders(){
         $services = self::where('status', self::STATUS_TYPE_ACTIVE)
             ->limit(3)
-            ->orderBy('created_at')
+            ->orderBy('id', 'desc')
             ->latest()
             ->get();
         $result = [];
@@ -95,8 +95,10 @@ class Service extends Model
         if(sizeof(Storage::files('public/images/service/'.$this->id)) > 0){
             $path = Storage::files('public/images/service/'.$this->id);
             foreach ($path as $img){
-                $img = substr($img, 7);
-                array_push($result, (string)"/storage/{$img}");
+                if(!strpos($img, 'preview')){
+                    $img = substr($img, 7);
+                    array_push($result, (string)"/storage/{$img}");
+                }
             }
         }else{
             $result = ["https://www.namepros.com/a/2018/05/106343_82907bfea9fe97e84861e2ee7c5b4f5b.png"];

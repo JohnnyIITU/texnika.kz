@@ -98,6 +98,7 @@
         name: "service",
         data() {
             return {
+                activeIndex: 0,
                 files: [],
                 images: [],
                 city: 1,
@@ -172,23 +173,19 @@
                 const formData = new FormData;
 
                 this.files.forEach(file => {
-                    if(file !== this.files[this.activeIndex]) {
-                        formData.append('images[]', file, file.name);
-                    }
+                    formData.append('images[]', file, file.name);
                 });
 
                 formData.append('mark', this.mark);
-                formData.append('model', this.model);
-                formData.append('year', this.year);
                 formData.append('city', this.city);
                 formData.append('type', this.type);
                 formData.append('phone', this.phone);
                 formData.append('email', this.email);
                 formData.append('price', this.price);
                 formData.append('curr', this.curr);
-                formData.append('condition', this.condition);
                 formData.append('description', this.description);
-                formData.append('preview', this.files[this.activeIndex]);
+                formData.append('service', this.service);
+                formData.append('preview', this.images[this.activeIndex]);
                 return formData;
             }
         },

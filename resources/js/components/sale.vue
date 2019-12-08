@@ -189,9 +189,7 @@
                 const formData = new FormData;
 
                 this.files.forEach(file => {
-                    if(file !== this.files[this.activeIndex]) {
-                        formData.append('images[]', file, file.name);
-                    }
+                    formData.append('images[]', file, file.name);
                 });
 
                 formData.append('mark', this.mark);

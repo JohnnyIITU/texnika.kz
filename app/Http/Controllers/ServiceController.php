@@ -6,6 +6,7 @@ use App\City;
 use App\Mark;
 use App\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
@@ -22,12 +23,11 @@ class ServiceController extends Controller
             ];
             return response()->json($result)->withCallback($request->input('callback'));
         }
-
+        DB::beginTransaction();
         $model = new Service();
         $model->status = Service::STATUS_TYPE_ACTIVE;
         foreach ($request->all() as $key => $value){
             if($key !== 'images' && $key !== 'preview') $model->$key = $value;
-                $model->$key = $value;
         }
         try{
             $model->save();
@@ -46,9 +46,14 @@ class ServiceController extends Controller
                 foreach ($request->images as $image) {
                     $image->store($path);
                 }
-                $request->preview->storeAs($path, "preview.{$request->preview->extension()}");
+                $data = substr($request->preview, strpos($request->preview, ',') + 1);
+
+                $data = base64_decode($data);
+                Storage::disk('local')->put($path.'preview.png', $data);
             }
+            DB::commit();
         }catch (\Exception $ex){
+            DB::rollBack();
             $result = [
                 'error' => true,
                 'error_text' => $ex->getMessage()
@@ -124,6 +129,7 @@ class ServiceController extends Controller
         $pageData = [];
         $last_index = $request->lastindex ?? 0;
         $condition = [];
+        array_push($condition, ['status' , Service::STATUS_TYPE_ACTIVE]);
         if($request->city != 0){
             array_push($condition, ['city',$request->city]);
         }
@@ -146,29 +152,58 @@ class ServiceController extends Controller
         if($last_index != 0){
             array_push($condition, ['id', '<', $last_index]);
         }
+        $keyWord = $request->keyWords;
         $objects = Service::where($condition)
             ->orderBy('id', 'desc')
             ->limit(9)
             ->get();
         foreach ($objects as $Service){
-            array_push($pageData, [
-                'id' => $Service->id,
-                'title' => Mark::getMarkById($Service->mark).' '.$Service->model,
-                'price' => Service::getPrice($Service->price, $Service->curr),
-                'city' => City::getCityById($Service->city),
-                'date' => Service::getDate($Service->created_at),
-                'image_data' => Service::getImage($Service->id),
-                'description' => $Service->description
-            ]);
-            $last_index = ($Service->id < $last_index || $last_index === 0) ? $Service->id : $last_index;
+            if($keyWord !== null) {
+                if ($this->checkKeyWord($keyWord, $Service)) {
+                    array_push($pageData, [
+                        'id' => $Service->id,
+                        'title' => Mark::getMarkById($Service->mark) . ' ' . $Service->model,
+                        'price' => Service::getPrice($Service->price, $Service->curr),
+                        'city' => City::getCityById($Service->city),
+                        'date' => Service::getDate($Service->created_at),
+                        'image_data' => Service::getImage($Service->id),
+                        'description' => $Service->description
+                    ]);
+                    $last_index = ($Service->id < $last_index || $last_index === 0) ? $Service->id : $last_index;
+                }else{
+                    $count--;
+                }
+            }else{
+                array_push($pageData, [
+                    'id' => $Service->id,
+                    'title' => Mark::getMarkById($Service->mark) . ' ' . $Service->model,
+                    'price' => Service::getPrice($Service->price, $Service->curr),
+                    'city' => City::getCityById($Service->city),
+                    'date' => Service::getDate($Service->created_at),
+                    'image_data' => Service::getImage($Service->id),
+                    'description' => $Service->description
+                ]);
+                $last_index = ($Service->id < $last_index || $last_index === 0) ? $Service->id : $last_index;
+            }
         }
         $result = [
-            'data' => array_reverse($pageData),
+            'data' => $pageData,
             'last_index' => $last_index,
             'count' => $count,
         ];
 
         return response()->json($result)->withCallback($request->input('callback'));
+    }
+
+    public function checkKeyWord($word, $model){
+        $word = strtolower($word);
+        $title = Mark::getMarkById($model->mark).' '.$model->model;
+        $descriptions = $model->description;
+        if(strpos(strtolower(" ".$title), $word)|| strpos(strtolower(" ".$descriptions), $word)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
 ?>

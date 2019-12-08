@@ -227,7 +227,6 @@
                 this.conditionLabel = label;
             },
             resetKeys: function(){
-                this.lastIndex = 0;
                 this.searchData = {
                     mark : this.mark,
                     city : this.city,
@@ -237,7 +236,8 @@
                     priceTo : this.priceTo,
                     keyWords : this.keyWords,
                 }
-            },
+                this.objectList = [];
+                this.objectIds = [];            },
             search: function(){
                 this.resetKeys();
                 this.axios.post('/service/getObjects', this.searchData).then(response => {
@@ -247,15 +247,17 @@
             fetchResponseData: function (response, clearData = false) {
                 this.lastIndex = response.last_index;
                 var vm = this;
-                if(response.data.length < 9) {
-                    this.allPostShown = true;
-                }
-                response.data.forEach( function (item) {
-                    if(!vm.objectIds.includes(item.id)){
-                        vm.objectIds.push(item.id);
-                        vm.objectList.push(item);
+                if(typeof response.data !== "undefined") {
+                    if (response.data.length < 9) {
+                        this.allPostShown = true;
                     }
-                });
+                    response.data.forEach(function (item) {
+                        if (!vm.objectIds.includes(item.id)) {
+                            vm.objectIds.push(item.id);
+                            vm.objectList.push(item);
+                        }
+                    });
+                }
                 this.count = response.count;
                 this.searchData.lastindex = this.lastIndex;
             },
@@ -269,7 +271,7 @@
                 }
             },
             loadMore: function(){
-                this.axios.post('/sale/getObjects', this.searchData).then(response => {
+                this.axios.post('/service/getObjects', this.searchData).then(response => {
                     this.fetchResponseData(response.data);
                 });
             },

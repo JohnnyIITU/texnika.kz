@@ -6,6 +6,7 @@ use App\City;
 use App\Mark;
 use App\Rent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class RentController extends Controller
@@ -15,6 +16,10 @@ class RentController extends Controller
     }
 
     public function save(Request $request){
+        $result = [
+            'error' => true,
+            'error_text' => 'test',
+        ];
         if($request->email === null && $request->phone === null){
             $result = [
                 'error' => true,
@@ -22,7 +27,7 @@ class RentController extends Controller
             ];
             return response()->json($result)->withCallback($request->input('callback'));
         }
-
+        DB::beginTransaction();
         $model = new Rent();
         $model->status = Rent::STATUS_TYPE_ACTIVE;
         foreach ($request->all() as $key => $value){
@@ -45,9 +50,14 @@ class RentController extends Controller
                 foreach ($request->images as $image) {
                     $image->store($path);
                 }
-                $request->preview->storeAs($path, "preview.{$request->preview->extension()}");
+                $data = substr($request->preview, strpos($request->preview, ',') + 1);
+
+                $data = base64_decode($data);
+                Storage::disk('local')->put($path.'preview.png', $data);
             }
+            DB::commit();
         }catch (\Exception $ex){
+            DB::rollBack();
             $result = [
                 'error' => true,
                 'error_text' => $ex->getMessage()
@@ -117,6 +127,7 @@ class RentController extends Controller
         $pageData = [];
         $last_index = $request->lastindex ?? 0;
         $condition = [];
+        array_push($condition, ['status' , Rent::STATUS_TYPE_ACTIVE]);
         if($request->city != 0){
             array_push($condition, ['city',$request->city]);
         }
@@ -136,24 +147,41 @@ class RentController extends Controller
         if($last_index != 0){
             array_push($condition, ['id', '<', $last_index]);
         }
+        $keyWord = $request->keyWords;
         $objects = Rent::where($condition)
             ->orderBy('id', 'desc')
             ->limit(9)
             ->get();
         foreach ($objects as $rent){
-            array_push($pageData, [
-                'id' => $rent->id,
-                'title' => Mark::getMarkById($rent->mark).' '.$rent->model,
-                'price' => Rent::getPrice($rent->price, $rent->curr),
-                'city' => City::getCityById($rent->city),
-                'date' => Rent::getDate($rent->created_at),
-                'image_data' => Rent::getISamage($rent->id),
-                'description' => $rent->description
-            ]);
-            $last_index = ($rent->id < $last_index || $last_index === 0) ? $rent->id : $last_index;
+            if($keyWord !== null) {
+                if ($this->checkKeyWord($keyWord, $rent)) {
+                    array_push($pageData, [
+                        'id' => $rent->id,
+                        'title' => Mark::getMarkById($rent->mark) . ' ' . $rent->model,
+                        'price' => Rent::getPrice($rent->price, $rent->curr),
+                        'city' => City::getCityById($rent->city),
+                        'date' => Rent::getDate($rent->created_at),
+                        'image_data' => Rent::getImage($rent->id),
+                        'description' => $rent->description
+                    ]);
+                    $last_index = ($rent->id < $last_index || $last_index === 0) ? $rent->id : $last_index;
+                }else{
+                    $count--;
+                }
+            }else{
+                array_push($pageData, [
+                    'id' => $rent->id,
+                    'title' => Mark::getMarkById($rent->mark) . ' ' . $rent->model,
+                    'price' => Rent::getPrice($rent->price, $rent->curr),
+                    'city' => City::getCityById($rent->city),
+                    'date' => Rent::getDate($rent->created_at),
+                    'image_data' => Rent::getImage($rent->id),
+                    'description' => $rent->description
+                ]);
+            }
         }
         $result = [
-            'data' => array_reverse($pageData),
+            'data' => $pageData,
             'last_index' => $last_index,
             'count' => $count,
         ];
@@ -165,5 +193,16 @@ class RentController extends Controller
         $info = Rent::findOrFail($id);
         $imageUrl = $info->getImages();
         return view('rent.view', compact('info'), compact('imageUrl'));
+    }
+
+    public function checkKeyWord($word, $model){
+        $word = strtolower($word);
+        $title = Mark::getMarkById($model->mark).' '.$model->model;
+        $descriptions = $model->description;
+        if(strpos(strtolower(" ".$title), $word)|| strpos(strtolower(" ".$descriptions), $word)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

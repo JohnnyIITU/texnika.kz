@@ -14,10 +14,10 @@
                 <div class="col-lg-6 text-lg-right d-none d-lg-block">
                     <div class="row">
                         <div class="col-lg-6">
-                            <button class="btn btn-warning btn-block mb-3" type="button" @click="trashSave">Сохранить в черновик</button>
+                            <button class="btn btn-warning btn-block mb-3" type="button" ref="btnTrash" @click="trashSave">Сохранить в черновик</button>
                         </div>
                         <div class="col-lg-6">
-                            <button class="btn btn-warning btn-block mb-3" type="button" @click="save">Опубликовать</button>
+                            <button class="btn btn-warning btn-block mb-3" type="button" ref="btnSave" @click="save">Опубликовать</button>
                         </div>
                     </div>
                 </div>
@@ -88,10 +88,10 @@
             <!-- begin row -->
             <div class="row d-lg-none">
                 <div class="col-12 col-sm-6">
-                    <button class="btn btn-primary btn-block mb-3" type="button" @click="trashSave">Сохранить в черновик</button>
+                    <button class="btn btn-primary btn-block mb-3" type="button" ref="btnTrashMob" @click="trashSave">Сохранить в черновик</button>
                 </div>
                 <div class="col-12 col-sm-6">
-                    <button class="btn btn-primary btn-block mb-3" type="button" @click="save">Опубликовать</button>
+                    <button class="btn btn-primary btn-block mb-3" type="button" ref="btnSaveMob" @click="save">Опубликовать</button>
                 </div>
             </div>
             <!-- end row -->
@@ -104,6 +104,7 @@
         name: "rent",
         data() {
             return {
+                activeIndex: 0,
                 files: [],
                 images: [],
                 city: 1,
@@ -159,17 +160,30 @@
                     });
             },
             save: function () {
+                this.$refs.btnTrash.disabled = true;
+                this.$refs.btnTrashMob.disabled = true;
+                this.$refs.btnSave.disabled = true;
+                this.$refs.btnSaveMob.disabled = true;
+                var vm = this;
                 this.axios.post('/rent/save', this.createResponseData())
                     .then((response) => {
                         this.fetchResponse(response.data)
                     })
                     .catch(error => {
                         alert(error)
+                        this.$refs.btnTrash.disabled = false;
+                        this.$refs.btnTrashMob.disabled = false;
+                        this.$refs.btnSave.disabled = false;
+                        this.$refs.btnSaveMob.disabled = false;
                     });
             },
             fetchResponse: function(response) {
                 if(response.error){
                     alert(response.error_text);
+                    this.$refs.btnTrash.disabled = false;
+                    this.$refs.btnTrashMob.disabled = false;
+                    this.$refs.btnSave.disabled = false;
+                    this.$refs.btnSaveMob.disabled = false;
                 }else{
                     window.location.href = '/';
                 }
@@ -178,9 +192,7 @@
                 const formData = new FormData;
 
                 this.files.forEach(file => {
-                    if(file !== this.files[this.activeIndex]) {
-                        formData.append('images[]', file, file.name);
-                    }
+                    formData.append('images[]', file, file.name);
                 });
 
                 formData.append('mark', this.mark);
@@ -192,7 +204,6 @@
                 formData.append('email', this.email);
                 formData.append('price', this.price);
                 formData.append('curr', this.curr);
-                formData.append('condition', this.condition);
                 formData.append('description', this.description);
                 formData.append('preview', this.files[this.activeIndex]);
                 return formData;

@@ -100,7 +100,7 @@
                 priceTo: null,
                 keyWords: null,
                 searchData: {
-                    lastindex: null,
+                    lastIndex: null,
                     city: null,
                     mark: null,
                     type: null,
@@ -208,6 +208,8 @@
                     keyWords : this.keyWords,
                     condition : this.condition,
                 }
+                this.objectList = [];
+                this.objectIds = [];
             },
             search: function(){
                 this.resetKeys();
@@ -218,17 +220,19 @@
             fetchResponseData: function (response, clearData = false) {
                 this.lastIndex = response.last_index;
                 var vm = this;
-                if(response.data.length < 9) {
-                    this.allPostShown = true;
-                }
-                response.data.forEach( function (item) {
-                    if(!vm.objectIds.includes(item.id)){
-                        vm.objectIds.push(item.id);
-                        vm.objectList.push(item);
+                if(typeof response.data !== "undefined") {
+                    if (response.data.length < 9) {
+                        this.allPostShown = true;
                     }
-                });
+                    response.data.forEach(function (item) {
+                        if (!vm.objectIds.includes(item.id)) {
+                            vm.objectIds.push(item.id);
+                            vm.objectList.push(item);
+                        }
+                    });
+                }
                 this.count = response.count;
-                this.searchData.lastindex = this.lastIndex;
+                this.searchData.lastIndex = this.lastIndex;
             },
             changeText: function(){
                 if(this.count === 1){
