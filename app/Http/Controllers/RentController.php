@@ -152,7 +152,13 @@ class RentController extends Controller
             ->orderBy('id', 'desc')
             ->limit(9)
             ->get();
+        $index = 1;
         foreach ($objects as $rent){
+            if($index === 9){
+                break;
+            }else{
+                $index++;
+            }
             if($keyWord !== null) {
                 if ($this->checkKeyWord($keyWord, $rent)) {
                     array_push($pageData, [

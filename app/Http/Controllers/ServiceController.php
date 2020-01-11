@@ -155,9 +155,14 @@ class ServiceController extends Controller
         $keyWord = $request->keyWords;
         $objects = Service::where($condition)
             ->orderBy('id', 'desc')
-            ->limit(9)
             ->get();
+        $index = 1;
         foreach ($objects as $Service){
+            if($index === 9){
+                break;
+            }else{
+                $index++;
+            }
             if($keyWord !== null) {
                 if ($this->checkKeyWord($keyWord, $Service)) {
                     array_push($pageData, [

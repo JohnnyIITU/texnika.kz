@@ -170,7 +170,13 @@ class SaleController extends Controller
             ->orderBy('id', 'desc')
             ->limit(9)
             ->get();
+        $index = 1;
         foreach ($objects as $Sale){
+            if($index === 9){
+                break;
+            }else{
+                $index++;
+            }
             if($keyWord !== null){
                 if($this->checkKeyWord($keyWord, $Sale)){
                     array_push($pageData, [
