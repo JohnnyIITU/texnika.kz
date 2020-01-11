@@ -23,6 +23,34 @@ class ServiceController extends Controller
             ];
             return response()->json($result)->withCallback($request->input('callback'));
         }
+        if($request->city == 0){
+            $result = [
+                'error' => true,
+                'error_text' => 'Выберите город'
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        if($request->type == 0){
+            $result = [
+                'error' => true,
+                'error_text' => 'Выберите тип техники'
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        if($request->mark == 0){
+            $result = [
+                'error' => true,
+                'error_text' => 'Выберите марку'
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        if($request->service == 0){
+            $result = [
+                'error' => true,
+                'error_text' => 'Выберите тип обслуживания'
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
         DB::beginTransaction();
         $model = new Service();
         $model->status = Service::STATUS_TYPE_ACTIVE;

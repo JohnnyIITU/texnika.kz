@@ -117,7 +117,7 @@
                 mark: 0,
                 model: '',
                 year: 2010,
-                condition: 1,
+                condition: 0,
                 price : null,
                 curr : 1,
                 phone: '',
