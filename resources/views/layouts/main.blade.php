@@ -8,8 +8,16 @@
         <title>Главная</title>
         <link rel="stylesheet" href="{{asset('styles/bootstrap.min.css')}}">
         <link rel="stylesheet" href="{{asset('styles/main.min.css')}}">
+        <link rel="stylesheet" href="{{asset('css/app.css')}}">
     </head>
     <body>
+        <div class="preloader" id="preloader">
+            <div class="item-1"></div>
+            <div class="item-2"></div>
+            <div class="item-3"></div>
+            <div class="item-4"></div>
+            <div class="item-5"></div>
+        </div>
         <div id="app">
             <!-- begin main-header -->
             <header class="main-header" role="banner">

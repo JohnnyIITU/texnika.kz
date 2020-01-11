@@ -33,5 +33,17 @@ Vue.component('upload-image', require('./components/upload_image').default);
 window.onload = function(){
     var app = new Vue({
         el: '#app',
+        methods : {
+            preloader(show) {
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
+            }
+        }
     });
 };

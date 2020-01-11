@@ -179,25 +179,34 @@
                 });
             },
             trashSave: function() {
+                this.$root.preloader(true);
                 if(this.authenticated) {
-                    this.axios.post('/service/saveToTrash', this.createResponseData()).then((response) => {
-                        console.log(response.data);
-                    });
+                    this.axios.post('/service/saveToTrash', this.createResponseData())
+                        .then((response) => {
+                            this.fetchResponse(response.data)
+                        })
+                        .catch(error => {
+                            this.$root.preloader(false);
+                            alert(error)
+                        });
                 }else{
                     alert('Вам необходимо зарегистрироваться')
                 }
             },
             save: function () {
+                this.$root.preloader(true);
                 this.axios.post('/service/save', this.createResponseData())
                     .then((response) => {
                         this.fetchResponse(response.data)
                     })
                     .catch(error => {
+                        this.$root.preloader(false);
                         alert(error)
                     });
             },
             fetchResponse: function(response) {
                 if(response.error){
+                    this.$root.preloader(false);
                     alert(response.error_text);
                 }else{
                     window.location.href = '/';

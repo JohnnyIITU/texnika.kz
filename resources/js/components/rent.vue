@@ -128,8 +128,14 @@
             this.getTypeOptions();
             this.getMarkOptions();
             this.getYearOptions();
+            this.checkAuth();
         },
         methods: {
+            checkAuth() {
+                this.axios.get('/checkAuth', {}).then(response => {
+                    this.authenticated = response.data;
+                });
+            },
             getCityOptions: function () {
                 this.axios.post('/getCityList', {}).then((response) => {
                     this.cityOptions = response.data;
@@ -166,15 +172,22 @@
                 });
             },
             trashSave: function() {
-                this.axios.post('/rent/saveToTrash', this.createResponseData())
+                this.$root.preloader(true);
+                if(this.authenticated) {
+                    this.axios.post('/rent/saveToTrash', this.createResponseData())
                     .then((response) => {
                         this.fetchResponse(response.data)
                     })
                     .catch(error => {
+                        this.$root.preloader(false);
                         alert(error)
                     });
+                }else{
+                    alert('Вам необходимо зарегистрироваться')
+                }
             },
             save: function () {
+                this.$root.preloader(true);
                 this.$refs.btnTrash.disabled = true;
                 this.$refs.btnTrashMob.disabled = true;
                 this.$refs.btnSave.disabled = true;
@@ -186,6 +199,7 @@
                     })
                     .catch(error => {
                         alert(error)
+                        this.$root.preloader(false);
                         this.$refs.btnTrash.disabled = false;
                         this.$refs.btnTrashMob.disabled = false;
                         this.$refs.btnSave.disabled = false;
@@ -194,6 +208,7 @@
             },
             fetchResponse: function(response) {
                 if(response.error){
+                    this.$root.preloader(false);
                     alert(response.error_text);
                     this.$refs.btnTrash.disabled = false;
                     this.$refs.btnTrashMob.disabled = false;

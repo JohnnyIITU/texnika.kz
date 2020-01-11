@@ -128,6 +128,7 @@
                 typeOptions: [],
                 conditionOptions: [],
                 description: '',
+                authenticated: false,
             }
         },
         mounted: function(){
@@ -136,9 +137,14 @@
             this.getMarkOptions();
             this.getYearOptions();
             this.getConditionOptions();
+            this.checkAuth();
         },
         methods: {
-            getCityOptions: function () {
+            checkAuth() {
+                this.axios.get('/checkAuth', {}).then(response => {
+                    this.authenticated = response.data;
+                });
+            },            getCityOptions: function () {
                 this.axios.post('/getCityList', {}).then((response) => {
                     this.cityOptions = response.data;
                     this.cityOptions.unshift({
@@ -185,21 +191,34 @@
                 });
             },
             trashSave: function() {
-                this.axios.post('/sale/saveToTrash', this.createResponseData()).then((response) => {
-                    console.log(response.data);
-                });
+                this.$root.preloader(true);
+                if(this.authenticated) {
+                this.axios.post('/sale/saveToTrash', this.createResponseData())
+                    .then((response) => {
+                        this.fetchResponse(response.data)
+                    })
+                    .catch(error => {
+                        this.$root.preloader(false);
+                        alert(error);
+                    });
+                }else{
+                    alert('Вам необходимо зарегистрироваться')
+                }
             },
             save: function () {
+                this.$root.preloader(true);
                 this.axios.post('/sale/save', this.createResponseData())
                     .then((response) => {
                         this.fetchResponse(response.data)
                     })
                     .catch(error => {
+                        this.$root.preloader(false);
                         alert(error);
                     });
             },
             fetchResponse: function(response) {
                 if(response.error){
+                    this.$root.preloader(false);
                     alert(response.error_text);
                 }else{
                     window.location.href = '/';
