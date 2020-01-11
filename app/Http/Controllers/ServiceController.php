@@ -158,13 +158,26 @@ class ServiceController extends Controller
             ->get();
         $index = 1;
         foreach ($objects as $Service){
-            if($index === 9){
-                break;
-            }else{
-                $index++;
-            }
             if($keyWord !== null) {
                 if ($this->checkKeyWord($keyWord, $Service)) {
+                    if($index <= 9) {
+                        array_push($pageData, [
+                            'id' => $Service->id,
+                            'title' => Mark::getMarkById($Service->mark) . ' ' . $Service->model,
+                            'price' => Service::getPrice($Service->price, $Service->curr),
+                            'city' => City::getCityById($Service->city),
+                            'date' => Service::getDate($Service->created_at),
+                            'image_data' => Service::getImage($Service->id),
+                            'description' => $Service->description
+                        ]);
+                        $last_index = ($Service->id < $last_index || $last_index === 0) ? $Service->id : $last_index;
+                        $index++;
+                    }
+                }else{
+                    $count--;
+                }
+            }else {
+                if ($index <= 9) {
                     array_push($pageData, [
                         'id' => $Service->id,
                         'title' => Mark::getMarkById($Service->mark) . ' ' . $Service->model,
@@ -174,21 +187,9 @@ class ServiceController extends Controller
                         'image_data' => Service::getImage($Service->id),
                         'description' => $Service->description
                     ]);
+                    $index++;
                     $last_index = ($Service->id < $last_index || $last_index === 0) ? $Service->id : $last_index;
-                }else{
-                    $count--;
                 }
-            }else{
-                array_push($pageData, [
-                    'id' => $Service->id,
-                    'title' => Mark::getMarkById($Service->mark) . ' ' . $Service->model,
-                    'price' => Service::getPrice($Service->price, $Service->curr),
-                    'city' => City::getCityById($Service->city),
-                    'date' => Service::getDate($Service->created_at),
-                    'image_data' => Service::getImage($Service->id),
-                    'description' => $Service->description
-                ]);
-                $last_index = ($Service->id < $last_index || $last_index === 0) ? $Service->id : $last_index;
             }
         }
         $result = [

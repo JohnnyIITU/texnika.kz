@@ -153,13 +153,26 @@ class RentController extends Controller
             ->get();
         $index = 1;
         foreach ($objects as $rent){
-            if($index === 9){
-                break;
-            }else{
-                $index++;
-            }
             if($keyWord !== null) {
                 if ($this->checkKeyWord($keyWord, $rent)) {
+                    if($index <= 9) {
+                        array_push($pageData, [
+                            'id' => $rent->id,
+                            'title' => Mark::getMarkById($rent->mark) . ' ' . $rent->model,
+                            'price' => Rent::getPrice($rent->price, $rent->curr),
+                            'city' => City::getCityById($rent->city),
+                            'date' => Rent::getDate($rent->created_at),
+                            'image_data' => Rent::getImage($rent->id),
+                            'description' => $rent->description
+                        ]);
+                        $last_index = ($rent->id < $last_index || $last_index === 0) ? $rent->id : $last_index;
+                        $index++;
+                    }
+                }else{
+                    $count--;
+                }
+            }else {
+                if ($index <= 9) {
                     array_push($pageData, [
                         'id' => $rent->id,
                         'title' => Mark::getMarkById($rent->mark) . ' ' . $rent->model,
@@ -170,19 +183,8 @@ class RentController extends Controller
                         'description' => $rent->description
                     ]);
                     $last_index = ($rent->id < $last_index || $last_index === 0) ? $rent->id : $last_index;
-                }else{
-                    $count--;
+                    $index++;
                 }
-            }else{
-                array_push($pageData, [
-                    'id' => $rent->id,
-                    'title' => Mark::getMarkById($rent->mark) . ' ' . $rent->model,
-                    'price' => Rent::getPrice($rent->price, $rent->curr),
-                    'city' => City::getCityById($rent->city),
-                    'date' => Rent::getDate($rent->created_at),
-                    'image_data' => Rent::getImage($rent->id),
-                    'description' => $rent->description
-                ]);
             }
         }
         $result = [

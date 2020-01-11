@@ -161,11 +161,11 @@ class SaleController extends Controller
         if($request->condition != 0){
             array_push($condition, ['condition','<', $request->condition]);
         }
-        $keyWord = $request->keyWords;
         $count = sizeof(Sale::where($condition)->get());
         if($last_index != 0){
             array_push($condition, ['id', '<', $last_index]);
         }
+        $keyWord = $request->keyWords;
         $objects = Sale::where($condition)
             ->orderBy('id', 'desc')
             ->get();
@@ -173,7 +173,7 @@ class SaleController extends Controller
         foreach ($objects as $Sale){
             if($keyWord !== null){
                 if($this->checkKeyWord($keyWord, $Sale)){
-                    if($index === 9){
+                    if($index <= 9){
                         array_push($pageData, [
                             'id' => $Sale->id,
                             'title' => Mark::getMarkById($Sale->mark).' '.$Sale->model,
@@ -184,17 +184,16 @@ class SaleController extends Controller
                             'description' => $Sale->description
                         ]);
                         $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
-                    }else{
                         $index++;
                     }
                 }else{
                     $count--;
                 }
             }else{
-                if($index === 9){
+                if($index <= 9) {
                     array_push($pageData, [
                         'id' => $Sale->id,
-                        'title' => Mark::getMarkById($Sale->mark).' '.$Sale->model,
+                        'title' => Mark::getMarkById($Sale->mark) . ' ' . $Sale->model,
                         'price' => Sale::getPrice($Sale->price, $Sale->curr),
                         'city' => City::getCityById($Sale->city),
                         'date' => Sale::getDate($Sale->created_at),
@@ -202,7 +201,6 @@ class SaleController extends Controller
                         'description' => $Sale->description
                     ]);
                     $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
-                }else{
                     $index++;
                 }
             }
