@@ -168,7 +168,6 @@ class SaleController extends Controller
         }
         $objects = Sale::where($condition)
             ->orderBy('id', 'desc')
-            ->limit(9)
             ->get();
         $index = 1;
         foreach ($objects as $Sale){

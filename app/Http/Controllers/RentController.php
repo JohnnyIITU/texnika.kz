@@ -150,7 +150,6 @@ class RentController extends Controller
         $keyWord = $request->keyWords;
         $objects = Rent::where($condition)
             ->orderBy('id', 'desc')
-            ->limit(9)
             ->get();
         $index = 1;
         foreach ($objects as $rent){
