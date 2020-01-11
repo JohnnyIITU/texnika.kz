@@ -37,102 +37,33 @@
                                     @else
                                         <li class="top-header-nav__item">
                                             <div class="dropdown">
-                                                <a href="/logout" role="button" id="dropdownLoginLink" class="top-header-nav__link"
-                                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <a href="/logout" class="top-header-nav__link">
                                                     Выход
                                                 </a>
                                             </div>
                                         </li>
                                     @endif
-                                    {{--<li class="top-header-nav__item top-header-nav__item--scrollpanel">--}}
-                                            {{--<div class="dropdown">--}}
-                                                {{--<a href="#" role="button"--}}
-                                                   {{--class="top-header-nav__link top-header-nav__link--favorite"--}}
-                                                   {{--id="dropdownFavoritesLink" data-toggle="dropdown" aria-haspopup="true"--}}
-                                                   {{--aria-expanded="false">--}}
-                                                    {{--Избранное--}}
-                                                {{--</a>--}}
-                                                {{--<div class="dropdown-menu" aria-labelledby="dropdownFavoritesLink">--}}
-                                                    {{--<h3 class="mb-4">Избранное</h3>--}}
-                                                    {{--<!-- begin scrollpanel -->--}}
-                                                    {{--<div class="scrollpanel">--}}
-                                                        {{--<!-- begin favorites -->--}}
-                                                        {{--<div class="favorites">--}}
-                                                            {{--<ul class="favorites__list favorites__list--header">--}}
-                                                                {{--<li class="favorites__item item-favorites">--}}
-                                                                    {{--<div class="item-favorites__inner">--}}
-                                                                        {{--<h4 class="item-favorites__title"><a href="#">Заголовок--}}
-                                                                                {{--может быть в одну или две строки</a></h4>--}}
-                                                                        {{--<div class="item-favorites__image"--}}
-                                                                             {{--style="background-image: url('../images/temp/photo-favorites1.jpg');"></div>--}}
-                                                                        {{--<span class="item-favorites__price">17 500 000 &#8376;</span>--}}
-                                                                        {{--<a href="#" class="item-favorites__overlay-link">Заголовок--}}
-                                                                            {{--может быть в одну или две строки</a>--}}
-                                                                    {{--</div>--}}
-                                                                {{--</li>--}}
-                                                                {{--<li class="favorites__item item-favorites">--}}
-                                                                    {{--<div class="item-favorites__inner">--}}
-                                                                        {{--<h4 class="item-favorites__title"><a href="#">Заголовок</a>--}}
-                                                                        {{--</h4>--}}
-                                                                        {{--<div class="item-favorites__image"--}}
-                                                                             {{--style="background-image: url('/images/temp/photo-favorites2.jpg');"></div>--}}
-                                                                        {{--<span class="item-favorites__price">17 500 000 &#8376;</span>--}}
-                                                                        {{--<a href="#"--}}
-                                                                           {{--class="item-favorites__overlay-link">Заголовок</a>--}}
-                                                                    {{--</div>--}}
-                                                                {{--</li>--}}
-                                                                {{--<li class="favorites__item item-favorites">--}}
-                                                                    {{--<div class="item-favorites__inner">--}}
-                                                                        {{--<h4 class="item-favorites__title"><a href="#">Заголовок--}}
-                                                                                {{--может быть в одну или две строки</a></h4>--}}
-                                                                        {{--<div class="item-favorites__image"--}}
-                                                                             {{--style="background-image: url('../images/temp/photo-favorites1.jpg');"></div>--}}
-                                                                        {{--<span class="item-favorites__price">17 500 000 &#8376;</span>--}}
-                                                                        {{--<a href="#" class="item-favorites__overlay-link">Заголовок--}}
-                                                                            {{--может быть в одну или две строки</a>--}}
-                                                                    {{--</div>--}}
-                                                                {{--</li>--}}
-                                                                {{--<li class="favorites__item item-favorites">--}}
-                                                                    {{--<div class="item-favorites__inner">--}}
-                                                                        {{--<h4 class="item-favorites__title"><a href="#">Заголовок</a>--}}
-                                                                        {{--</h4>--}}
-                                                                        {{--<div class="item-favorites__image"--}}
-                                                                             {{--style="background-image: url('../images/temp/photo-favorites2.jpg');"></div>--}}
-                                                                        {{--<span class="item-favorites__price">17 500 000 &#8376;</span>--}}
-                                                                        {{--<a href="#"--}}
-                                                                           {{--class="item-favorites__overlay-link">Заголовок</a>--}}
-                                                                    {{--</div>--}}
-                                                                {{--</li>--}}
-                                                                {{--<li class="favorites__item item-favorites">--}}
-                                                                    {{--<div class="item-favorites__inner">--}}
-                                                                        {{--<h4 class="item-favorites__title"><a href="#">Заголовок--}}
-                                                                                {{--может быть в одну или две строки</a></h4>--}}
-                                                                        {{--<div class="item-favorites__image"--}}
-                                                                             {{--style="background-image: url('../images/temp/photo-favorites1.jpg');"></div>--}}
-                                                                        {{--<span class="item-favorites__price">17 500 000 &#8376;</span>--}}
-                                                                        {{--<a href="#" class="item-favorites__overlay-link">Заголовок--}}
-                                                                            {{--может быть в одну или две строки</a>--}}
-                                                                    {{--</div>--}}
-                                                                {{--</li>--}}
-                                                                {{--<li class="favorites__item item-favorites">--}}
-                                                                    {{--<div class="item-favorites__inner">--}}
-                                                                        {{--<h4 class="item-favorites__title"><a href="#">Заголовок</a>--}}
-                                                                        {{--</h4>--}}
-                                                                        {{--<div class="item-favorites__image"--}}
-                                                                             {{--style="background-image: url('../images/temp/photo-favorites2.jpg');"></div>--}}
-                                                                        {{--<span class="item-favorites__price">17 500 000 &#8376;</span>--}}
-                                                                        {{--<a href="#"--}}
-                                                                           {{--class="item-favorites__overlay-link">Заголовок</a>--}}
-                                                                    {{--</div>--}}
-                                                                {{--</li>--}}
-                                                            {{--</ul>--}}
-                                                        {{--</div>--}}
-                                                        {{--<!-- end favorites -->--}}
-                                                    {{--</div>--}}
-                                                    {{--<!-- end scrollpanel -->--}}
-                                                {{--</div>--}}
-                                            {{--</div>--}}
-                                        {{--</li>--}}
+                                    <li class="top-header-nav__item top-header-nav__item--scrollpanel" onclick="alert('Вам необъходиом зарегистрироватся')">
+{{--                                        <div class="dropdown">--}}
+{{--                                                <a href="#" role="button"--}}
+{{--                                                   class="top-header-nav__link top-header-nav__link--favorite"--}}
+{{--                                                   id="dropdownFavoritesLink" data-toggle="dropdown" aria-haspopup="true"--}}
+{{--                                                   aria-expanded="false">--}}
+{{--                                                    Избранное--}}
+{{--                                                </a>--}}
+{{--                                                <div class="dropdown-menu" aria-labelledby="dropdownFavoritesLink">--}}
+{{--                                                    <h3 class="mb-4">Избранное</h3>--}}
+{{--                                                    <!-- begin scrollpanel -->--}}
+{{--                                                    <div class="scrollpanel">--}}
+{{--                                                        <!-- begin favorites -->--}}
+{{--                                                        <div class="favorites">--}}
+{{--                                                        </div>--}}
+{{--                                                        <!-- end favorites -->--}}
+{{--                                                    </div>--}}
+{{--                                                    <!-- end scrollpanel -->--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+                                    </li>
                                 </ul>
                             </div>
                         </div>
