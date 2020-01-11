@@ -197,6 +197,7 @@ class SaleController extends Controller
                     'description' => $Sale->description
                 ]);
                 $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
+                $count++;
             }
         }
         $result = [

@@ -148,7 +148,6 @@ class ServiceController extends Controller
         if($request->condition != 0){
             array_push($condition, ['condition','<', $request->condition]);
         }
-        $count = sizeof(Service::where($condition)->get());
         if($last_index != 0){
             array_push($condition, ['id', '<', $last_index]);
         }
@@ -184,6 +183,7 @@ class ServiceController extends Controller
                     'description' => $Service->description
                 ]);
                 $last_index = ($Service->id < $last_index || $last_index === 0) ? $Service->id : $last_index;
+                $count++;
             }
         }
         $result = [

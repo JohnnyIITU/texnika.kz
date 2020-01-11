@@ -178,6 +178,7 @@ class RentController extends Controller
                     'image_data' => Rent::getImage($rent->id),
                     'description' => $rent->description
                 ]);
+                $count++;
             }
         }
         $result = [
