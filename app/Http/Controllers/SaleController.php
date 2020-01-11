@@ -171,13 +171,27 @@ class SaleController extends Controller
             ->get();
         $index = 1;
         foreach ($objects as $Sale){
-            if($index === 9){
-                break;
-            }else{
-                $index++;
-            }
             if($keyWord !== null){
                 if($this->checkKeyWord($keyWord, $Sale)){
+                    if($index === 9){
+                        array_push($pageData, [
+                            'id' => $Sale->id,
+                            'title' => Mark::getMarkById($Sale->mark).' '.$Sale->model,
+                            'price' => Sale::getPrice($Sale->price, $Sale->curr),
+                            'city' => City::getCityById($Sale->city),
+                            'date' => Sale::getDate($Sale->created_at),
+                            'image_data' => Sale::getImage($Sale->id),
+                            'description' => $Sale->description
+                        ]);
+                        $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
+                    }else{
+                        $index++;
+                    }
+                }else{
+                    $count--;
+                }
+            }else{
+                if($index === 9){
                     array_push($pageData, [
                         'id' => $Sale->id,
                         'title' => Mark::getMarkById($Sale->mark).' '.$Sale->model,
@@ -189,19 +203,8 @@ class SaleController extends Controller
                     ]);
                     $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
                 }else{
-                    $count--;
+                    $index++;
                 }
-            }else{
-                array_push($pageData, [
-                    'id' => $Sale->id,
-                    'title' => Mark::getMarkById($Sale->mark).' '.$Sale->model,
-                    'price' => Sale::getPrice($Sale->price, $Sale->curr),
-                    'city' => City::getCityById($Sale->city),
-                    'date' => Sale::getDate($Sale->created_at),
-                    'image_data' => Sale::getImage($Sale->id),
-                    'description' => $Sale->description
-                ]);
-                $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
             }
         }
         $result = [
