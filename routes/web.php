@@ -107,4 +107,8 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'admin.texnika.kz')], function (
         $model->save();
         echo 'OK';
     });
+
+    Route::get('checkAuth', function (){
+        return response()->json(Auth::check());
+    });
 //});

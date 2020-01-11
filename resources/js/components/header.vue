@@ -169,10 +169,10 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto align-items-lg-center">
-                        <li class="nav-item active"><a class="nav-link" href="/">Главная</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Продажа</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Аренда</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Обслуживание</a></li>
+                        <li class="nav-item" :class="mainPage"><a class="nav-link" href="/">Главная</a></li>
+                        <li class="nav-item" :class="salePage"><a class="nav-link" href="#">Продажа</a></li>
+                        <li class="nav-item" :class="rentPage"><a class="nav-link" href="#">Аренда</a></li>
+                        <li class="nav-item" :class="servicePage"><a class="nav-link" href="#">Обслуживание</a></li>
                         <li class="nav-item">
                             <div class="dropdown ml-lg-4">
                                 <a href="#" role="button" id="dropdownMenuButton"
@@ -208,12 +208,40 @@
                 cityLabel : null,
                 city: null,
                 cityOptions: null,
+                mainPage : false,
+                rentPage : false,
+                salePage : false,
+                servicePage : false,
             }
         },
-        mounted: {
-
+        mounted() {
+            this.checkUrl()
         },
         methods: {
+            checkUrl(){
+                console.log('a');
+                if(window.location.pathname.indexOf('sale')){
+                    this.salePage = 'active';
+                    this.rentPage = '';
+                    this.servicePage = '';
+                    this.mainPage = '';
+                }else if(window.location.pathname.indexOf('rent')){
+                    this.salePage = '';
+                    this.rentPage = 'active';
+                    this.servicePage = '';
+                    this.mainPage = '';
+                }else if(window.location.pathname.indexOf('service')){
+                    this.salePage = '';
+                    this.rentPage = '';
+                    this.servicePage = 'active';
+                    this.mainPage = '';
+                }else{
+                    this.salePage = '';
+                    this.rentPage = '';
+                    this.servicePage = '';
+                    this.mainPage = 'active';
+                }
+            },
             getCityOptions: function () {
                 this.axios.post('/getCityList', {}).then((response) => {
                     this.cityOptions = response.data;

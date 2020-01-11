@@ -49,15 +49,15 @@
                 <div class="filter-second">
                     <div class="row">
                         <div class="col-lg-4 mb-4 mb-lg-0">
-                            <input type="text" class="form-control form-control-sm" v-model="keyWords" placeholder="Поиск по ключевым словам">
+                            <input type="text" class="form-control form-control-sm" @keydown.enter="searchWithReset" v-model="keyWords" placeholder="Поиск по ключевым словам">
                         </div>
                         <div class="col-lg-4 mb-4 mb-lg-0">
                             <div class="input-group">
                                 <div class="input-group-prepend col-lg-6 col-md-4 pr-0 pl-0">
                                     <span class="input-group-text w-100">Цена</span>
                                 </div>
-                                <input type="text" aria-label="First name" class="form-control form-control-sm" v-model="priceFrom" placeholder="От">
-                                <input type="text" aria-label="Last name" class="form-control form-control-sm" v-model="priceTo" placeholder="До">
+                                <input type="text" aria-label="First name" class="form-control form-control-sm" @keydown.enter="searchWithReset" v-model="priceFrom" placeholder="От">
+                                <input type="text" aria-label="Last name" class="form-control form-control-sm" @keydown.enter="searchWithReset" v-model="priceTo" placeholder="До">
                             </div>
                         </div>
                         <div class="col-lg-4">
@@ -73,7 +73,7 @@
                     <!-- begin col -->
                     <div class="col-lg-4 mb-5" v-for="(item, index) in objectList">
                         <div class="item">
-                            <h4 class="item__title"><a href="#">{{item.title}}</a></h4>
+                            <h4 class="item__title"><a :href="`/sale/view/${item.id}`">{{item.title}}</a></h4>
                             <div class="item__image"  :style="{ backgroundImage: 'url(\'' + item.image_data + '\')' }">
                                 <i class="item__star current"></i>
                                 <div class="item__price-first">{{item.price}}</div>
@@ -84,7 +84,7 @@
                                     <div class="item__meta">{{item.city}}, {{item.date}}</div>
                                 </div>
                             </div>
-                            <a href="#" class="item__overlay-link">Заголовок второго уровня</a>
+                            <a :href="`/sale/view/${item.id}`" class="item__overlay-link">Заголовок второго уровня</a>
                         </div>
                     </div>
                     <!-- end col -->

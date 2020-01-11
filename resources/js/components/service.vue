@@ -73,6 +73,9 @@
                 </div>
             </div>
             <!-- end row -->
+            <div class="row mb-5 mg-lg-0 col-12">
+                <h2>Загрузка рисунков</h2>
+            </div>
             <!-- begin row -->
             <upload-image
                     :files="files"
@@ -114,6 +117,7 @@
                 typeOptions: [],
                 markOptions: [],
                 description: '',
+                authenticated : false,
             }
         },
         mounted: function(){
@@ -121,6 +125,7 @@
             this.getTypeOptions();
             this.getMarkOptions();
             this.getServiceOptions();
+            this.checkAuth();
         },
         methods: {
             getServiceOptions: function() {
@@ -168,10 +173,19 @@
                     this.yearOptions = response.data;
                 });
             },
-            trashSave: function() {
-                this.axios.post('/service/saveToTrash', this.createResponseData()).then((response) => {
-                    console.log(response.data);
+            checkAuth() {
+                this.axios.get('/checkAuth', {}).then(response => {
+                    this.authenticated = response.data;
                 });
+            },
+            trashSave: function() {
+                if(this.authenticated) {
+                    this.axios.post('/service/saveToTrash', this.createResponseData()).then((response) => {
+                        console.log(response.data);
+                    });
+                }else{
+                    alert('Вам необходимо зарегистрироваться')
+                }
             },
             save: function () {
                 this.axios.post('/service/save', this.createResponseData())

@@ -182,10 +182,10 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ml-auto align-items-lg-center">
-                                <li class="nav-item"><a class="nav-link" href="/">Главная</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/sale">Продажа</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/rent">Аренда</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/service">Обслуживание</a></li>
+                                <li class="nav-item @if(request()->is('/')) active @endif" ><a class="nav-link" href="/">Главная</a></li>
+                                <li class="nav-item @if(request()->is('sale*')) active @endif"><a class="nav-link" href="/sale">Продажа</a></li>
+                                <li class="nav-item @if(request()->is('rent*')) active @endif"><a class="nav-link" href="/rent">Аренда</a></li>
+                                <li class="nav-item @if(request()->is('service*')) active @endif"><a class="nav-link" href="/service">Обслуживание</a></li>
                                 <li class="nav-item">
                                     <div class="dropdown ml-lg-4">
                                         <a href="#" role="button" id="dropdownMenuButton"
