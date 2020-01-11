@@ -152,7 +152,6 @@ class RentController extends Controller
             ->orderBy('id', 'desc')
             ->limit(9)
             ->get();
-        $count = 0;
         foreach ($objects as $rent){
             if($keyWord !== null) {
                 if ($this->checkKeyWord($keyWord, $rent)) {
@@ -166,7 +165,8 @@ class RentController extends Controller
                         'description' => $rent->description
                     ]);
                     $last_index = ($rent->id < $last_index || $last_index === 0) ? $rent->id : $last_index;
-                    $count++;
+                }else{
+                    $count--;
                 }
             }else{
                 array_push($pageData, [
@@ -178,7 +178,6 @@ class RentController extends Controller
                     'image_data' => Rent::getImage($rent->id),
                     'description' => $rent->description
                 ]);
-                $count++;
             }
         }
         $result = [

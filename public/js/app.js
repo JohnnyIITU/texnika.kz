@@ -4056,6 +4056,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "service",
   data: function data() {
@@ -4075,7 +4078,8 @@ __webpack_require__.r(__webpack_exports__);
       cityOptions: [],
       typeOptions: [],
       markOptions: [],
-      description: ''
+      description: '',
+      authenticated: false
     };
   },
   mounted: function mounted() {
@@ -4083,6 +4087,7 @@ __webpack_require__.r(__webpack_exports__);
     this.getTypeOptions();
     this.getMarkOptions();
     this.getServiceOptions();
+    this.checkAuth();
   },
   methods: {
     getServiceOptions: function getServiceOptions() {
@@ -4144,16 +4149,27 @@ __webpack_require__.r(__webpack_exports__);
         _this5.yearOptions = response.data;
       });
     },
-    trashSave: function trashSave() {
-      this.axios.post('/service/saveToTrash', this.createResponseData()).then(function (response) {
-        console.log(response.data);
-      });
-    },
-    save: function save() {
+    checkAuth: function checkAuth() {
       var _this6 = this;
 
+      this.axios.get('/checkAuth', {}).then(function (response) {
+        _this6.authenticated = response.data;
+      });
+    },
+    trashSave: function trashSave() {
+      if (this.authenticated) {
+        this.axios.post('/service/saveToTrash', this.createResponseData()).then(function (response) {
+          console.log(response.data);
+        });
+      } else {
+        alert('Вам необходимо зарегистрироваться');
+      }
+    },
+    save: function save() {
+      var _this7 = this;
+
       this.axios.post('/service/save', this.createResponseData()).then(function (response) {
-        _this6.fetchResponse(response.data);
+        _this7.fetchResponse(response.data);
       })["catch"](function (error) {
         alert(error);
       });
@@ -22925,6 +22941,15 @@ var render = function() {
                 },
                 domProps: { value: _vm.keyWords },
                 on: {
+                  keydown: function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.searchWithReset($event)
+                  },
                   input: function($event) {
                     if ($event.target.composing) {
                       return
@@ -22956,6 +22981,15 @@ var render = function() {
                   },
                   domProps: { value: _vm.priceFrom },
                   on: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.searchWithReset($event)
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -22982,6 +23016,15 @@ var render = function() {
                   },
                   domProps: { value: _vm.priceTo },
                   on: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.searchWithReset($event)
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -23020,7 +23063,7 @@ var render = function() {
             return _c("div", { staticClass: "col-lg-4 mb-5" }, [
               _c("div", { staticClass: "item" }, [
                 _c("h4", { staticClass: "item__title" }, [
-                  _c("a", { attrs: { href: "#" } }, [
+                  _c("a", { attrs: { href: "/rent/view/" + item.id } }, [
                     _vm._v(_vm._s(item.title))
                   ])
                 ]),
@@ -23056,7 +23099,10 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "a",
-                  { staticClass: "item__overlay-link", attrs: { href: "#" } },
+                  {
+                    staticClass: "item__overlay-link",
+                    attrs: { href: "/rent/view/" + item.id }
+                  },
                   [_vm._v("Заголовок второго уровня")]
                 )
               ])
@@ -24157,6 +24203,15 @@ var render = function() {
                 },
                 domProps: { value: _vm.keyWords },
                 on: {
+                  keydown: function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.searchWithReset($event)
+                  },
                   input: function($event) {
                     if ($event.target.composing) {
                       return
@@ -24188,6 +24243,15 @@ var render = function() {
                   },
                   domProps: { value: _vm.priceFrom },
                   on: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.searchWithReset($event)
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -24214,6 +24278,15 @@ var render = function() {
                   },
                   domProps: { value: _vm.priceTo },
                   on: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.searchWithReset($event)
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -24252,7 +24325,7 @@ var render = function() {
             return _c("div", { staticClass: "col-lg-4 mb-5" }, [
               _c("div", { staticClass: "item" }, [
                 _c("h4", { staticClass: "item__title" }, [
-                  _c("a", { attrs: { href: "#" } }, [
+                  _c("a", { attrs: { href: "/sale/view/" + item.id } }, [
                     _vm._v(_vm._s(item.title))
                   ])
                 ]),
@@ -24288,7 +24361,10 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "a",
-                  { staticClass: "item__overlay-link", attrs: { href: "#" } },
+                  {
+                    staticClass: "item__overlay-link",
+                    attrs: { href: "/sale/view/" + item.id }
+                  },
                   [_vm._v("Заголовок второго уровня")]
                 )
               ])
@@ -25429,6 +25505,15 @@ var render = function() {
                 },
                 domProps: { value: _vm.keyWords },
                 on: {
+                  keydown: function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.searchWithReset($event)
+                  },
                   input: function($event) {
                     if ($event.target.composing) {
                       return
@@ -25460,6 +25545,15 @@ var render = function() {
                   },
                   domProps: { value: _vm.priceFrom },
                   on: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.searchWithReset($event)
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -25486,6 +25580,15 @@ var render = function() {
                   },
                   domProps: { value: _vm.priceTo },
                   on: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.searchWithReset($event)
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -25524,7 +25627,7 @@ var render = function() {
             return _c("div", { staticClass: "col-lg-4 mb-5" }, [
               _c("div", { staticClass: "item" }, [
                 _c("h4", { staticClass: "item__title" }, [
-                  _c("a", { attrs: { href: "#" } }, [
+                  _c("a", { attrs: { href: "/service/view/" + item.id } }, [
                     _vm._v(_vm._s(item.title))
                   ])
                 ]),
@@ -25560,7 +25663,10 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "a",
-                  { staticClass: "item__overlay-link", attrs: { href: "#" } },
+                  {
+                    staticClass: "item__overlay-link",
+                    attrs: { href: "/service/view/" + item.id }
+                  },
                   [_vm._v("Заголовок второго уровня")]
                 )
               ])
@@ -26286,6 +26392,8 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
+        _vm._m(2),
+        _vm._v(" "),
         _c("upload-image", {
           attrs: {
             files: _vm.files,
@@ -26364,6 +26472,14 @@ var staticRenderFns = [
       _c("div", { staticClass: "col" }, [
         _c("h1", { staticClass: "title-page" }, [_vm._v("Обслуживание")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row mb-5 mg-lg-0 col-12" }, [
+      _c("h2", [_vm._v("Загрузка рисунков")])
     ])
   }
 ]

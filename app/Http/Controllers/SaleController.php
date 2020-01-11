@@ -166,7 +166,6 @@ class SaleController extends Controller
         if($last_index != 0){
             array_push($condition, ['id', '<', $last_index]);
         }
-        $count = 0;
         $objects = Sale::where($condition)
             ->orderBy('id', 'desc')
             ->limit(9)
@@ -184,7 +183,8 @@ class SaleController extends Controller
                         'description' => $Sale->description
                     ]);
                     $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
-                    $count++;
+                }else{
+                    $count--;
                 }
             }else{
                 array_push($pageData, [
@@ -197,7 +197,6 @@ class SaleController extends Controller
                     'description' => $Sale->description
                 ]);
                 $last_index = ($Sale->id < $last_index || $last_index === 0) ? $Sale->id : $last_index;
-                $count++;
             }
         }
         $result = [
