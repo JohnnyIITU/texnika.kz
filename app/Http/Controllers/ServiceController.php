@@ -157,6 +157,7 @@ class ServiceController extends Controller
             ->orderBy('id', 'desc')
             ->limit(9)
             ->get();
+        $count = 0;
         foreach ($objects as $Service){
             if($keyWord !== null) {
                 if ($this->checkKeyWord($keyWord, $Service)) {
@@ -170,8 +171,7 @@ class ServiceController extends Controller
                         'description' => $Service->description
                     ]);
                     $last_index = ($Service->id < $last_index || $last_index === 0) ? $Service->id : $last_index;
-                }else{
-                    $count--;
+                    $count++;
                 }
             }else{
                 array_push($pageData, [
