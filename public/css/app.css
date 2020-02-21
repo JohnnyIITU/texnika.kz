@@ -1,0 +1,234 @@
+.preloader {
+  z-index: 1001;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  overflow: hidden;
+  -webkit-animation-delay: 1s;
+          animation-delay: 1s;
+  background: #00dcff4d;
+  opacity: 0.8;
+}
+
+.item-1 {
+  width: 20px;
+  height: 20px;
+  background: #f583a1;
+  border-radius: 50%;
+  background-color: #faf970;
+  margin: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@-webkit-keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+
+  50%, 75% {
+    transform: scale(2.5);
+  }
+
+  78%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+
+  50%, 75% {
+    transform: scale(2.5);
+  }
+
+  78%, 100% {
+    opacity: 0;
+  }
+}
+
+.item-1:before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #faf970;
+  opacity: 0.7;
+  -webkit-animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+          animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+  -webkit-animation-delay: 200ms;
+          animation-delay: 200ms;
+  transition: 0.5s all ease;
+  transform: scale(1);
+}
+
+.item-2 {
+  width: 20px;
+  height: 20px;
+  background: #f583a1;
+  border-radius: 50%;
+  background-color: #faf950;
+  margin: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+
+  50%, 75% {
+    transform: scale(2.5);
+  }
+
+  78%, 100% {
+    opacity: 0;
+  }
+}
+
+.item-2:before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #faf950;
+  opacity: 0.7;
+  -webkit-animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+          animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+  -webkit-animation-delay: 400ms;
+          animation-delay: 400ms;
+  transition: 0.5s all ease;
+  transform: scale(1);
+}
+
+.item-3 {
+  width: 20px;
+  height: 20px;
+  background: #f583a1;
+  border-radius: 50%;
+  background-color: #faf930;
+  margin: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+
+  50%, 75% {
+    transform: scale(2.5);
+  }
+
+  78%, 100% {
+    opacity: 0;
+  }
+}
+
+.item-3:before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #faf930;
+  opacity: 0.7;
+  -webkit-animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+          animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+  -webkit-animation-delay: 600ms;
+          animation-delay: 600ms;
+  transition: 0.5s all ease;
+  transform: scale(1);
+}
+
+.item-4 {
+  width: 20px;
+  height: 20px;
+  background: #f583a1;
+  border-radius: 50%;
+  background-color: #faf110;
+  margin: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+
+  50%, 75% {
+    transform: scale(2.5);
+  }
+
+  78%, 100% {
+    opacity: 0;
+  }
+}
+
+.item-4:before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #faf110;
+  opacity: 0.7;
+  -webkit-animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+          animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+  -webkit-animation-delay: 800ms;
+          animation-delay: 800ms;
+  transition: 0.5s all ease;
+  transform: scale(1);
+}
+
+.item-5 {
+  width: 20px;
+  height: 20px;
+  background: #f583a1;
+  border-radius: 50%;
+  background-color: #faf990;
+  margin: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+
+  50%, 75% {
+    transform: scale(2.5);
+  }
+
+  78%, 100% {
+    opacity: 0;
+  }
+}
+
+.item-5:before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #faf990;
+  opacity: 0.7;
+  -webkit-animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+          animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+  -webkit-animation-delay: 1000ms;
+          animation-delay: 1000ms;
+  transition: 0.5s all ease;
+  transform: scale(1);
+}
+

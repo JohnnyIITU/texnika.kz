@@ -14,7 +14,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdown09">
                     <a class="dropdown-item" href="{{route('cities')}}">Города</a>
                     <a class="dropdown-item" href="{{route('equipments')}}">Тип техники</a>
-                    <a class="dropdown-item" href="{{route('services')}}">Тип услуг</a>
+                    <a class="dropdown-item" href="{{route('service_types')}}">Тип услуг</a>
                     <a class="dropdown-item" href="{{route('marks')}}">Марки</a>
                 </div>
             </li>

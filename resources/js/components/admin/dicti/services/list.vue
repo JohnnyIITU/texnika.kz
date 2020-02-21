@@ -49,7 +49,7 @@
         },
         methods: {
             getList() {
-                this.axios.post('/services/getList', {})
+                this.axios.post('/service/getList', {})
                     .then( response => {
                         this.setList(response.data);
                     })
@@ -68,7 +68,7 @@
             },
             deleteItem(id){
                 if(confirm('Вы действительно хотите удалить')){
-                    this.axios.post('/services/delete', {id: id})
+                    this.axios.post('/service/delete', {id: id})
                         .then(response => {
                             if(response.data.success){
                                 alert('Успешно удалено');
@@ -79,7 +79,7 @@
                 }
             },
             addItem(){
-                location.href = '/services/add'
+                location.href = '/service/add'
             }
         },
 

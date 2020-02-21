@@ -24,11 +24,11 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'admin.texnika.kz')], function (
     Route::post('/equipments/add', 'Admin\SiteController@addEquipment');
     Route::post('/equipments/delete', 'Admin\SiteController@deleteEquipment');
 
-    Route::get('services', 'Admin\SiteController@services')->name('services');
-    Route::post('/services/getList', 'Admin\SiteController@getServices');
-    Route::get('/services/add', 'Admin\SiteController@addServiceView');
-    Route::post('/services/add', 'Admin\SiteController@addService');
-    Route::post('/services/delete', 'Admin\SiteController@deleteService');
+    Route::get('service', 'Admin\SiteController@services')->name('service_types');
+    Route::post('/service/getList', 'Admin\SiteController@getServices');
+    Route::get('/service/add', 'Admin\SiteController@addServiceView');
+    Route::post('/service/add', 'Admin\SiteController@addService');
+    Route::post('/service/delete', 'Admin\SiteController@deleteService');
 
 
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -49,7 +50,7 @@ class LoginController extends Controller
                 $error = true;
                 $errorText = 'Ошибка попробуйте позднее';
             }
-            $user->password = crypt($password, time());
+            $user->password = Hash::make($password);
             $user->save();
             Auth::login($user);
         }
@@ -71,7 +72,7 @@ class LoginController extends Controller
             $error = true;
             $errorText = 'Неверный логин или пароль';
         }else{
-            if(crypt($password, $users->password) === $users->password){
+            if(Hash::check($password, $users->password)){
                 Auth::login($users);
                 $error = false;
                 $errorText = '';
