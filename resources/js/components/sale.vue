@@ -72,7 +72,7 @@
                             <input type="number" step="100" class="form-control" v-model="price" name="price" placeholder="Цена">
                         </div>
                         <div class="form-group col-lg-3 col-4 mb-lg-0">
-                            <select class="form-control select-css-without-arrow" name="currency" v-model="curr">
+                            <select class="form-control select-css-without-arrow" disabled name="currency" v-model="curr">
                                 <option value="1">KZT</option>
                             </select>
                         </div>
