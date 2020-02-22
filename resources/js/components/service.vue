@@ -209,7 +209,7 @@
                     this.$root.preloader(false);
                     alert(response.error_text);
                 }else{
-                    // window.location.href = '/';
+                    window.location.href = '/';
                 }
             },
             createResponseData: function () {

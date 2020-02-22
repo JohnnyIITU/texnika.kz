@@ -16,27 +16,27 @@ class ServiceController extends Controller
     }
 
     public function save(Request $request){
-//        if($request->email === null && $request->phone === null){
-//            $result = [
-//                'error' => true,
-//                'error_text' => 'Укажите email или номер телефона'
-//            ];
-//            return response()->json($result)->withCallback($request->input('callback'));
-//        }
-//        if($request->city == 0){
-//            $result = [
-//                'error' => true,
-//                'error_text' => 'Выберите город'
-//            ];
-//            return response()->json($result)->withCallback($request->input('callback'));
-//        }
-//        if($request->type == 0){
-//            $result = [
-//                'error' => true,
-//                'error_text' => 'Выберите тип техники'
-//            ];
-//            return response()->json($result)->withCallback($request->input('callback'));
-//        }
+        if($request->email === null && $request->phone === null){
+            $result = [
+                'error' => true,
+                'error_text' => 'Укажите email или номер телефона'
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        if($request->city == 0){
+            $result = [
+                'error' => true,
+                'error_text' => 'Выберите город'
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        if($request->type == 0){
+            $result = [
+                'error' => true,
+                'error_text' => 'Выберите тип техники'
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
         $marks = explode(',', $request->mark);
         if(sizeof($marks) > 3){
             $result = [
