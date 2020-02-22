@@ -16,47 +16,58 @@ class ServiceController extends Controller
     }
 
     public function save(Request $request){
-        if($request->email === null && $request->phone === null){
+//        if($request->email === null && $request->phone === null){
+//            $result = [
+//                'error' => true,
+//                'error_text' => 'Укажите email или номер телефона'
+//            ];
+//            return response()->json($result)->withCallback($request->input('callback'));
+//        }
+//        if($request->city == 0){
+//            $result = [
+//                'error' => true,
+//                'error_text' => 'Выберите город'
+//            ];
+//            return response()->json($result)->withCallback($request->input('callback'));
+//        }
+//        if($request->type == 0){
+//            $result = [
+//                'error' => true,
+//                'error_text' => 'Выберите тип техники'
+//            ];
+//            return response()->json($result)->withCallback($request->input('callback'));
+//        }
+        $marks = explode(',', $request->mark);
+        if(sizeof($marks) > 3){
             $result = [
                 'error' => true,
-                'error_text' => 'Укажите email или номер телефона'
+                'error_text' => 'Максимальное количество выбираемых марок 3'
             ];
             return response()->json($result)->withCallback($request->input('callback'));
         }
-        if($request->city == 0){
-            $result = [
-                'error' => true,
-                'error_text' => 'Выберите город'
-            ];
-            return response()->json($result)->withCallback($request->input('callback'));
-        }
-        if($request->type == 0){
-            $result = [
-                'error' => true,
-                'error_text' => 'Выберите тип техники'
-            ];
-            return response()->json($result)->withCallback($request->input('callback'));
-        }
-        if($request->mark == 0){
+        if(in_array('0', $marks)){
             $result = [
                 'error' => true,
                 'error_text' => 'Выберите марку'
             ];
             return response()->json($result)->withCallback($request->input('callback'));
         }
-        if($request->service == 0){
-            $result = [
-                'error' => true,
-                'error_text' => 'Выберите тип обслуживания'
-            ];
-            return response()->json($result)->withCallback($request->input('callback'));
-        }
+//        if($request->service == 0){
+//            $result = [
+//                'error' => true,
+//                'error_text' => 'Выберите тип обслуживания'
+//            ];
+//            return response()->json($result)->withCallback($request->input('callback'));
+//        }
         DB::beginTransaction();
         $model = new Service();
         $model->status = Service::STATUS_TYPE_ACTIVE;
         foreach ($request->all() as $key => $value){
-            if($key !== 'images' && $key !== 'preview') $model->$key = $value;
+            if($key !== 'images' && $key !== 'preview' && $key !=='mark') $model->$key = $value;
         }
+        $model->mark = $marks[0];
+        $model->markII = $marks[1] ?? null;
+        $model->markIII = $marks[2] ?? null;
         try{
             $model->save();
         }catch (\Exception $ex){

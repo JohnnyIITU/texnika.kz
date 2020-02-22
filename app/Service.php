@@ -107,8 +107,18 @@ class Service extends Model
     }
 
     public function getMarkAndModelLabel(){
-        $mark = Mark::find($this->mark)->value ?? "";
-        return "$mark $this->model";
+        $mark = [];
+        if($this->mark !== null){
+            array_push($mark, Mark::find($this->mark)->value);
+        }
+        if($this->markII !== null){
+            array_push($mark, Mark::find($this->markII)->value);
+        }
+        if($this->markIII !== null){
+            array_push($mark, Mark::find($this->markIII)->value);
+        }
+        $a = implode(', ',$mark);
+        return $a;
     }
 
 }

@@ -4,6 +4,13 @@
     use App\Equipment;
 @endphp
 @section('content')
+    <title>
+        {{$info->getMarkAndModelLabel()}}
+    </title>
+    <meta name="description" content="
+        {{$info->getMarkAndModelLabel()}} {{City::getCityById($info->city)}} {{json_encode(Equipment::getLabelById($info->type)) }}
+        {{$info->description}}
+    ">
     <main class="main-content" role="main">
         <div class="container">
             <rent-view

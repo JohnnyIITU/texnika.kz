@@ -6,6 +6,10 @@ use App\Service;
 @extends('layouts.main')
 
 @section('content')
+    <title>
+        Главная | texnika.kz
+    </title>
+    <meta name="description" content="Покупка, Аренда спецтехники">
 <main class="main-content" role="main">
     <div class="container">
         <div class="row">

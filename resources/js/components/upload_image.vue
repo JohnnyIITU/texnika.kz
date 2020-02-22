@@ -1,26 +1,13 @@
 <template>
     <div class="row mb-5 mg-lg-0">
-        <!--<div class="col-6 col-sm-4 col-lg-2 mb-3">-->
-            <!--<div class="input-file-preview">-->
-                <!--<img src="/images/temp/input-file-preview.jpg" width="203" height="111">-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="col-6 col-sm-4 col-lg-2">-->
-            <!--<div class="input-file-preview">-->
-                <!--<img src="/images/temp/input-file-preview.jpg" width="203" height="111">-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="col-6 col-sm-4 col-lg-2 mb-4">-->
-            <!--<div class="input-file-preview"></div>-->
-        <!--</div>-->
-        <!--<div class="col-6 col-sm-4 col-lg-2 mb-4">-->
-            <!--<div class="input-file-preview"></div>-->
-        <!--</div>-->
-        <!--<div class="col-6 col-sm-4 col-lg-2 mb-4">-->
-            <!--<div class="input-file-preview"></div>-->
-        <!--</div>-->
         <div class="col-6 col-sm-4 col-lg-2 mb-4" v-for="(image, index) in images" :key="index">
-            <div class="input-file-preview" @click="setActive(index)" :class="{'active-image' : index === activeIndex}">
+            <div class="input-file-preview image-container" @click="setActive(index)" :class="{'active-image' : index === activeIndex}">
+                <button type="button"
+                        class="delete-image-button"
+                        @click="deleteImage(index)">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="layer"></div>
                 <img :src="image"/>
             </div>
         </div>
@@ -58,7 +45,7 @@
             activeIndex : {
                 type: Number,
                 default() {
-                    return []
+                    return 0;
                 }
             },
         },
@@ -85,7 +72,10 @@
             },
             setActive (index) {
                 this.$parent.activeIndex = index;
-                // this.activeIndex = index
+            },
+            deleteImage (index) {
+                this.$parent.images.splice(index,1);
+                this.$parent.activeIndex = 0;
             }
         },
         watch: {
@@ -96,3 +86,52 @@
 
     }
 </script>
+
+<style scoped>
+    .image-container {
+        position: relative;
+    }
+
+    .layer {
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        transition: 0.4s ease-in-out;
+    }
+
+    .delete-image-button {
+        display: none;
+        right: 0;
+        position: absolute;
+        z-index: 2;
+        border: none;
+        background-color: #000;
+        outline: none;
+        transition: 0.4s ease-in-out;
+    }
+
+    .delete-image-button i {
+        color: #FFF;
+    }
+
+    .image-container:hover .layer {
+        transition: 0.4s ease;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .image-container:hover .delete-image-button {
+        cursor: pointer;
+        display: block;
+    }
+
+    .button-delete {
+        cursor: pointer;
+        outline: none;
+        transition: 0.4s ease;
+    }
+
+    .button-delete:hover {
+        color: red;
+    }
+</style>

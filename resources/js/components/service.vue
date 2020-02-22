@@ -47,7 +47,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <select class="form-control select-css" name="brand" v-model="mark">
+                        <select multiple class="form-control" name="brand" v-model="mark">
                             <option v-for="key in markOptions" :value="key.key">{{key.label}}</option>
                         </select>
                     </div>
@@ -62,7 +62,7 @@
                             <input type="number" step="100" class="form-control" v-model="price" name="price" placeholder="Цена">
                         </div>
                         <div class="form-group col-lg-3 col-4 mb-lg-0">
-                            <select class="form-control select-css" name="currency" v-model="curr">
+                            <select class="form-control select-css-without-arrow" disabled name="currency" v-model="curr">
                                 <option value="1">KZT</option>
                             </select>
                         </div>
@@ -106,7 +106,7 @@
                 images: [],
                 city: 0,
                 type: 0,
-                mark: 0,
+                mark: [0],
                 service: 0,
                 price : null,
                 curr : 1,
@@ -209,7 +209,7 @@
                     this.$root.preloader(false);
                     alert(response.error_text);
                 }else{
-                    window.location.href = '/';
+                    // window.location.href = '/';
                 }
             },
             createResponseData: function () {
